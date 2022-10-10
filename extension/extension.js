@@ -151,7 +151,7 @@
 
   async function runPayWallScript() {
     console.log("check paywall");
-    let domain = window.location.hostname;
+    let domain = window.location.hostname.replace('www.','');
     let links = await fetchLinksFrmDB(domain);
     let { paywall, elements } = checkIfPaywall(window.location.href, links);
     if (paywall) {
