@@ -57,7 +57,7 @@ That should be it.
 
 #### Webflow
 
-[MT Jack](https://twitter.com/mtjack9) made a [loom demo](https://www.loom.com/share/35a68c09d8784ba69ce577721bd5d515) you can follow.
+[MT Jack](https://twitter.com/mtjack9) made a [loom walk-through](https://www.loom.com/share/35a68c09d8784ba69ce577721bd5d515) you can follow.
 
 ### Reader
 
