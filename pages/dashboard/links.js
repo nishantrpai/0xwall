@@ -19,6 +19,8 @@ import { domainPattern, validateValue } from "util/validate";
 export default function Dashboard({ address, token }) {
   const [loading, setLoading] = useState(false);
 
+  const writerAccount = address?.toLowerCase();
+
   const config = useMemo(
     () => ({
       headers: {
@@ -38,7 +40,7 @@ export default function Dashboard({ address, token }) {
 
   const [formState, setFormState] = useState("");
 
-  const initTierData = () => {
+  const initTierData = (address) => {
     return {
       writer_account: address?.toLowerCase(),
       name: "",
@@ -181,7 +183,7 @@ export default function Dashboard({ address, token }) {
           className="flex items-center gap-1 float-right text-sm px-2 py-1 text-gray-800 rounded-md bg-white shadow-sm shadow-gray-200 hover:shadow-none"
           onClick={() => {
             setFormState("add");
-            setTierData(initTierData());
+            setTierData(initTierData(address));
           }}
         >
           <FiPlus />
@@ -430,6 +432,7 @@ export default function Dashboard({ address, token }) {
                 <button
                   className="p-4 py-2 text-sm bg-gray-100 text-gray-500 rounded-md"
                   onClick={() => {
+                    setLoading(false);
                     setFormState("");
                   }}
                 >

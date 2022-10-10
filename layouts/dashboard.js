@@ -17,7 +17,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="container">
-      <Navbar />
+      <Navbar address={address} />
       <div className="flex gap-4 mt-2 border-b-2 py-2">
         <TabItem name="Readers" icon={<FiBarChart />} link="/dashboard" />
         <TabItem name="Links" icon={<FiLink />} link="/dashboard/links" />
