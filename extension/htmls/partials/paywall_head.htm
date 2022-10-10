@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>✋ :requirement:</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <noscript>
+      <h3>
+        You must have JavaScript enabled in order to use this order form. Please
+        enable JavaScript and then reload this page in order to continue.
+      </h3>
+      <meta
+        http-equiv="refresh"
+        content="0;url"
+        ="https://support.google.com/adsense/answer/12654?hl=en"
+      />
+    </noscript>
+    <style>
+      body {
+        height: 100vh;
+      }
+
+      #paywall-notify {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        font-family: sans-serif;
+        background-color: #eee;
+        border-radius: 20px;
+      }
+
+      #checkout-ctr {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+        padding: 20px;
+        margin: auto;
+        border-radius: 5px;
+        background-color: #fff;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%),
+          0 4px 6px -4px rgb(0 0 0 / 10%);
+      }
+
+      #checkout-btn {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        font-family: sans-serif;
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        width: auto;
+        font-weight: bold;
+        padding: 10px 15px;
+        font-size: 14px;
+        background: #dbeafe;
+        margin: auto;
+        margin-top: 12px;
+      }
+
+      .btn-checkout-tx {
+        display: flex !important;
+      }
+
+      .btn-checkout-token {
+        display: none !important;
+      }
+
+      .unlock-requirement {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        margin: 12px 0px;
+        margin-bottom: 0px;
+        color: #999;
+        overflow-wrap: break-word;
+        text-align: center;
+      }
+
+      .app-link {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        font-size: 12px;
+        color: #777;
+        margin-top: 10px;
+        gap: 2px;
+      }
+
+      #install-mm {
+        font-size: 10px;
+        color: #333;
+        margin-top: 10px;
+      }
+
+      #status-svg {
+        display: flex;
+      }
+    </style>
+  </head>
+
+  <body>
+    :paywall_html:
+    <script>
+      if (!window.ethereum) {
+        if (!true) {
+          document.getElementById("install-mm").innerHTML =
+            "Install <a href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en' target='_blank'> Metamask </a>";
+        } else {
+          let domainRe = new RegExp("http(s)?://");
+          let domain = window.location.href.replace(domainRe, "");
+          domain = domain.replace("www.", "");
+          document.getElementById("install-mm").innerHTML =
+            "Open in <a href='https://metamask.app.link/dapp/" +
+            domain +
+            "' target='_blank'> Metamask Browser </a>";
+        }
+      }
+
+      async function unlockPayWall() {
+        if (document.getElementById("checkout-price")) {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const accounts = await provider.send("eth_requestAccounts", []);
+          const signer = provider.getSigner();
+          const tx = await signer.sendTransaction({
+            to: ":writer_account:",
+            value: ethers.utils.parseEther(":txprice:"),
+            data: ethers.utils.formatBytes32String(":domain:"),
+          });
+
+          document.getElementById("checkout-price").remove();
+          document.getElementById("status-svg").innerHTML =
+            '<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle></svg>';
+          const receipt = await tx.wait();
+          if (receipt) {
+            let addTxResp = await fetch(":api_url:/api/reader", {
+              method: "POST",
+              body: JSON.stringify({
+                reader_account: accounts[0],
+                tx: tx.hash,
+                value: ":txprice:",
+                link: ":link:",
+              }),
+            });
+            let { success } = await addTxResp.json();
+            if (success) {
+              document.getElementById("status-svg").innerHTML =
+                '<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+              window.location.reload();
+            } else {
+              document.getElementById("status-svg").innerHTML =
+                '<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+              window.location.reload();
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
