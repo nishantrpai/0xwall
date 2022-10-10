@@ -45,7 +45,7 @@ book.com
   <script src="https://0xwall.app/api/extension"></script>
 ```
 
-If you are using carrd:
+#### Carrd
 
 - Go to the editor of your Carrd website and add an "Embed" component.
 
@@ -55,7 +55,7 @@ If you are using carrd:
 
 That should be it.
 
-If you are using webflow:
+#### Webflow
 
 [MT Jack](https://twitter.com/mtjack9) made a [loom demo](https://www.loom.com/share/35a68c09d8784ba69ce577721bd5d515) you can follow.
 
