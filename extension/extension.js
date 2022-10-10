@@ -96,8 +96,12 @@
     });
   }
 
+  function formatURL(url) {
+    return url.replace('https://','').replace('http://','').replace('www.','');
+  }
+
   function matchURL(currentLocation, link) {
-    let curl = new URL(currentLocation);
+    let curl = new URL(`https://${formatURL(currentLocation)}`);
     let dblink = new URL(`https://${link}`);
     curl = `${curl.hostname}${curl.pathname}`;
     dblink = `${dblink.hostname}${dblink.pathname}`;
