@@ -89,8 +89,7 @@
   function showElements(elements, tiers, links) {
     elements.forEach((element) => {
       if (tiers.includes(element.tier_id)) {
-        document.querySelector(element.hash).innerHTML =
-          payWalledElement[element.hash];
+        setInnerHTML(document.querySelector(element.hash), payWalledElement[element.hash]);
       }
     });
   }
