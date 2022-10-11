@@ -15,8 +15,10 @@ import {
 } from "react-icons/fi";
 import Modal from "components/Modal";
 import { domainPattern, validateValue } from "util/validate";
+import { useRouter } from "next/router";
 
 export default function Dashboard({ address, token }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const writerAccount = address?.toLowerCase();
@@ -192,9 +194,9 @@ export default function Dashboard({ address, token }) {
         <div className="grid mt-14">
           {accountInfo?.service_tier - linksUsed <= 3 && (
             <span className="text-sm bg-yellow-100 text-yellow-800 p-2">
-              You have used {linksUsed} of {accountInfo?.service_tier} links. To
-              add more links, you'll need to{" "}
-              <a className="underline" href="/dashboard/upgrade">
+              Used {linksUsed}/{accountInfo?.service_tier} links. To
+              add more links you can {" "}
+              <a className="underline" onClick={() => { router.push('/dashboard/upgrade') }}>
                 upgrade
               </a>
               .

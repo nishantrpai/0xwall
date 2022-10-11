@@ -3,6 +3,12 @@ import { createClient } from "@supabase/supabase-js";
 const { SUPABASE_URL, SUPABASE_KEY } = process.env;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+const createAccount = async (writer_account) => {
+  await supabase
+    .from("paywall_service_tier")
+    .insert([{ writer_account, service_tier: 10 }]);
+}
+
 const addTier = async (req, res) => {
   const { tier, tiers } = JSON.parse(req.body);
 
@@ -29,10 +35,9 @@ const addTier = async (req, res) => {
     .select("*")
     .eq("writer_account", writer_account);
 
-  if (!accountInfo) {
-    await supabase
-      .from("paywall_service_tier")
-      .insert([{ writer_account, service_tier: 10 }]);
+  if (!accountInfo.length) {
+    await createAccount(writer_account);
+    accountInfo.push({ writer_account, service_tier: 10 });
   }
 
   if (totalLinks > accountInfo[0]?.service_tier) {
@@ -136,12 +141,11 @@ const editTier = async (req, res) => {
     .select("*")
     .eq("writer_account", writer_account);
 
-  if (!accountInfo) {
-    accountInfo = [{ service_tier: 10 }];
-    await supabase
-      .from("paywall_service_tier")
-      .insert([{ writer_account, service_tier: 10 }]);
+  if (!accountInfo.length) {
+    createAccount(writer_account);
+    accountInfo.push({ writer_account, service_tier: 10 });
   }
+
   if (totalLinks > accountInfo[0]?.service_tier) {
     res.status(200).json({ success: false, error: "Exhausted total links" });
   } else {

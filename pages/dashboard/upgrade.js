@@ -21,7 +21,7 @@ export default function Upgrade({ address, token }) {
   );
   let {
     linksUsed,
-    accountInfo = { service_tier: 10 },
+    accountInfo = { writer_account: address, service_tier: 10 },
     rate = { price: 0 },
   } = service;
 
@@ -101,7 +101,7 @@ export default function Upgrade({ address, token }) {
             PRICE: {linksToBuy * parseFloat(rate?.price)}Ξ
           </span>
           <button
-            className="bg-green-200 text-green-800 max-w-max m-auto p-2 px-4 rounded-md font-bold mt-4"
+            className={`${linksToBuy ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-300' } max-w-max m-auto p-2 px-4 rounded-md font-bold mt-4`}
             onClick={upgradeTier}
           >
             Upgrade

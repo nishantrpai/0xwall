@@ -177,8 +177,8 @@
 
   // FETCH ALL LINKS
   window.addEventListener("load", (event) => {
-    console.log("on link loaded");
-    // init(window.location.href);
+    console.log("dom has loaded completely");
+    init(window.location.href);
   });
 
   window.addEventListener(
@@ -192,7 +192,7 @@
   document.onreadystatechange = function (e) {
     if (document.readyState === "complete") {
       console.log("dom has been loaded");
-      init(window.location.href);
+      // init(window.location.href);
     }
   };
 })();
