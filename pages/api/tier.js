@@ -179,17 +179,17 @@ const deleteTier = async (req, res) => {
   const { error: readersError } = await supabase
     .from("paywall_reader_tx")
     .delete()
-    .match({ tier_id: tier });
+    .eq("tier_id", tier);
 
   const { error: linkError } = await supabase
     .from("paywall_writer_links")
     .delete()
-    .match({ tier_id: tier });
+    .eq("tier_id", tier);
 
   const { error: writerError } = await supabase
     .from("paywall_link_tiers")
     .delete()
-    .match({ id: tier });
+    .eq("id", tier);
 
   let deleteError = linkError || writerError || readersError;
 
