@@ -47,11 +47,10 @@
       )}</a>`;
       btnStyle = "btn-checkout-tx";
     } else {
-      requirement = `&nbsp;Unlocking this page requires ${token_balance} ${
-        parseInt(token_balance) > 1 ? "tokens" : "token"
-      } of <a href="https://etherscan.io/token/${contract_addr}" target="_blank">${humanizeWallet(
-        contract_addr
-      )}</a></span>`;
+      requirement = `&nbsp;Unlocking this page requires ${token_balance} ${parseInt(token_balance) > 1 ? "tokens" : "token"
+        } of <a href="https://etherscan.io/token/${contract_addr}" target="_blank">${humanizeWallet(
+          contract_addr
+        )}</a></span>`;
       btnStyle = "btn-checkout-token";
     }
     paywallhtml = paywallhtml.replaceAll(":btn-style:", btnStyle);
@@ -97,10 +96,10 @@
   }
 
   function formatURL(url) {
-    return url.replace('https://','').replace('http://','').replace('www.','');
+    return url.replace('https://', '').replace('http://', '').replace('www.', '');
   }
 
-  function matchURL(currentLocation, link) {
+  function matchPath(currentLocation, link) {
     let curl = new URL(`https://${formatURL(currentLocation)}`);
     let dblink = new URL(`https://${link}`);
     curl = `${curl.hostname}${curl.pathname}`;
@@ -108,7 +107,16 @@
     return curl == dblink;
   }
 
-  function getElement(link) {
+  function matchHashorSection(currentLocation, link) {
+    let curl = new URL(`https://${formatURL(currentLocation)}`);
+    let dblink = new URL(`https://${link}`);
+    if((curl.hash == dblink.hash) || document.querySelector(dblink.hash)) {
+      return true;
+    }
+    return false;
+  }
+
+  function getElement(currentLocation, link) {
     let dblink = new URL(`https://${link}`);
     let element = "body";
     if (dblink.hash)
@@ -118,22 +126,25 @@
     return element;
   }
 
+
   function checkIfPaywall(currentLocation, allLinks) {
     let elements = [];
     let paywall = false;
     for (let i = 0; i < allLinks.length; i++) {
-      if (matchURL(currentLocation, allLinks[i].link)) {
-        paywall = true;
-        elements.push({
-          hash: getElement(allLinks[i].link),
-          link: allLinks[i].link,
-          tier_id: allLinks[i].tier_id,
-          price: allLinks[i].price,
-          type: allLinks[i].type,
-          contract_addr: allLinks[i].contract_addr,
-          token_balance: allLinks[i].token_balance,
-          writer_account: allLinks[i].writer_account,
-        });
+      if (matchPath(currentLocation, allLinks[i].link)) {
+        if (matchHashorSection(currentLocation, allLinks[i].link)) {
+          paywall = true;
+          elements.push({
+            hash: getElement(currentLocation, allLinks[i].link),
+            link: allLinks[i].link,
+            tier_id: allLinks[i].tier_id,
+            price: allLinks[i].price,
+            type: allLinks[i].type,
+            contract_addr: allLinks[i].contract_addr,
+            token_balance: allLinks[i].token_balance,
+            writer_account: allLinks[i].writer_account,
+          });
+        }
       }
     }
     return { paywall, elements };
@@ -155,7 +166,7 @@
 
   async function runPayWallScript() {
     console.log("check paywall");
-    let domain = window.location.hostname.replace('www.','');
+    let domain = window.location.hostname.replace('www.', '');
     let links = await fetchLinksFrmDB(domain);
     let { paywall, elements } = checkIfPaywall(window.location.href, links);
     if (paywall) {
