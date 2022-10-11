@@ -102,6 +102,11 @@ export default function Dashboard({ address, token }) {
     if (name == "links") {
       value = value.split("\n");
     }
+
+    if (name == "domain") {
+      value = value.replace('www.', '');
+    }
+
     setTierData((prevState) => ({
       ...prevState,
       [name]: value,
@@ -386,11 +391,10 @@ export default function Dashboard({ address, token }) {
               <div className="flex flex-row-reverse w-full gap-4 mt-4 rounded-b-lg p-2">
                 {
                   <button
-                    className={`p-4 py-2 text-sm ${
-                      validateFormData(tierData) && !formStateErrors
+                    className={`p-4 py-2 text-sm ${validateFormData(tierData) && !formStateErrors
                         ? "opacity-100"
                         : "opacity-50"
-                    } bg-green-100 text-green-800 rounded-md font-bold`}
+                      } bg-green-100 text-green-800 rounded-md font-bold`}
                     onClick={() => {
                       if (
                         !loading &&
