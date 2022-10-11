@@ -49,3 +49,18 @@ export const validateValue = (name, value) => {
   }
   return isValidValue;
 };
+
+export const validateFormData = (tierData) => {
+  if (
+    !tierData.name ||
+    !domainPattern.test(tierData.domain) ||
+    !tierData.links.length ||
+    (tierData.type == "tx" && !tierData.price) ||
+    (tierData.type == "token" && !tierData.contract_addr) ||
+    (tierData.type == "token" && !tierData.token_balance)
+  ) {
+    return false;
+  }
+
+  return true;
+};

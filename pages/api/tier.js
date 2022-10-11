@@ -1,5 +1,6 @@
 import { fetchAccount } from "util/auth";
 import { createClient } from "@supabase/supabase-js";
+import { validateFormData } from "util/validate";
 const { SUPABASE_URL, SUPABASE_KEY } = process.env;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -11,6 +12,10 @@ const createAccount = async (writer_account) => {
 
 const addTier = async (req, res) => {
   const { tier, tiers } = JSON.parse(req.body);
+
+  if (!validateFormData(tier)) {
+    res.send(200).json({ success: false, error: 'invalid data' });
+  }
 
   let totalLinks = 0;
   Object.keys(tiers).map((tier) => {
@@ -110,6 +115,11 @@ const fetchTiers = async (req, res) => {
 
 const editTier = async (req, res) => {
   let { tier, tiers } = JSON.parse(req.body);
+  
+  if (!validateFormData(tier)) {
+    res.send(200).json({ success: false, error: 'invalid data' });
+  }
+
   let {
     name,
     domain,

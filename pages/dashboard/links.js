@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
 import { fetcher } from "util/index";
@@ -8,13 +7,12 @@ import {
   FiChevronDown,
   FiEdit,
   FiExternalLink,
-  FiLink,
   FiPlus,
   FiTrash,
   FiX,
 } from "react-icons/fi";
 import Modal from "components/Modal";
-import { domainPattern, validateValue } from "util/validate";
+import { validateFormData, validateValue } from "util/validate";
 import { useRouter } from "next/router";
 
 export default function Dashboard({ address, token }) {
@@ -70,21 +68,6 @@ export default function Dashboard({ address, token }) {
   });
 
   const [formStateErrors, setFormStateErrors] = useState(false);
-
-  const validateFormData = () => {
-    if (
-      !tierData.name ||
-      !domainPattern.test(tierData.domain) ||
-      !tierData.links.length ||
-      (tierData.type == "tx" && !tierData.price) ||
-      (tierData.type == "token" && !tierData.contract_addr) ||
-      (tierData.type == "token" && !tierData.token_balance)
-    ) {
-      return false;
-    }
-
-    return true;
-  };
 
   const handleTierUpdate = (e) => {
     let { name, value } = e.target;
