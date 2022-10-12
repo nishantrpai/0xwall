@@ -193,29 +193,28 @@
     init(window.location.href);
   });
 
-  window.addEventListener(
-    "hashchange",
-    async () => {
-      console.log("on hash changed");
-      await runPayWallScript();
-    },
-    false
-  );
+  // window.addEventListener(
+  //   "hashchange",
+  //   async () => {
+  //     console.log("on hash changed");
+  //     await runPayWallScript();
+  //   },
+  //   false
+  // );
 
   document.onreadystatechange = function (e) {
-    // init(window.location.href);
-    document.body.addEventListener('click', () => {
-      if (document.readyState === "complete") {
-        console.log("dom has been loaded");
+    if (document.readyState === "complete") {
+      console.log("dom has been loaded");
+      // init(window.location.href);
+      document.body.addEventListener('click', () => {
         requestAnimationFrame(async () => {
           if (windowurl !== window.location.href) {
             console.log("url changed");
             windowurl = window.location.href;
-            init(window.location.href);
+            runPayWallScript();
           }
         });
-      }
-    }, true);
-
+      }, true);
+    }
   };
 })();
