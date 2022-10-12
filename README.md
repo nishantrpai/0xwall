@@ -75,6 +75,14 @@ That should be it.
 
 PS: He did it while sipping coffee
 
+#### Next.js
+
+1. Go to `_document.js`
+
+2. Paste script, you'll have to add `async` attribute. [Source](https://developer.chrome.com/blog/script-component/#sequencing-third-party-scripts-without-a-framework-component)
+
+
+
 ### Reader
 
 If you run into a website that is paywalled by 0xwall:
