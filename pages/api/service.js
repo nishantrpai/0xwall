@@ -59,28 +59,38 @@ const editServiceStatus = async (req, res) => {
   let service_tier = accountInfo.service_tier + parseInt(linksToBuy);
 
   let ethLink = parseFloat(rate.price);
+  
   let transacted = await verifyTx(
     hash,
     writer_account,
     rate.maintainer_account,
-    linksToBuy * ethLink,
+    parseInt(linksToBuy) * ethLink,
     "0x"
   );
+
   if (transacted) {
     const { data: txExists } = await supabase
       .from("paywall_service_tier")
       .select("*")
       .match({ tx: hash });
-    if (!txExists) {
+        
+    if (!txExists.length) {
       const { error: serviceUpdateError } = await supabase
         .from("paywall_service_tier")
         .update({ service_tier, tx: hash })
         .match({ writer_account });
-      if (!serviceUpdateError) res.status(200).json({ success: true });
+      
+    
+      if (!serviceUpdateError) {
+        res.status(200).json({ success: true });
+      }
+    } else {
+      res.status(200).json({ success: false, transacted });
     }
+  } else {
+    res.status(200).json({ success: false, transacted });
   }
 
-  res.status(200).json({ success: false, transacted });
 };
 
 export default async function handler(req, res) {

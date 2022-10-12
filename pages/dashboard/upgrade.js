@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import Head from "next/head";
 import { useMemo, useState } from "react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { fetcher } from "util/index";
 import DashboardLayout from "layouts/dashboard";
 
@@ -15,7 +15,9 @@ export default function Upgrade({ address, token }) {
     [token]
   );
 
-  const { data: service = {}, error } = useSWR(
+  const [loading, setLoading] = useState(false);
+
+  const { data: service = {}, error, mutate } = useSWR(
     [`/api/service`, config],
     fetcher
   );
@@ -29,6 +31,7 @@ export default function Upgrade({ address, token }) {
 
   const upgradeTier = async () => {
     try {
+      setLoading(true);
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const tx = await signer.sendTransaction({
@@ -44,11 +47,13 @@ export default function Upgrade({ address, token }) {
           },
           body: JSON.stringify({
             linksToBuy,
-            hash: receipt.blockHash,
+            hash: receipt.transactionHash,
           }),
         });
         let { success } = await response.json();
+        setLoading(false);
         if (success) {
+          mutate();
           console.log("Upgraded");
         }
       }
@@ -101,10 +106,36 @@ export default function Upgrade({ address, token }) {
             PRICE: {linksToBuy * parseFloat(rate?.price)}Ξ
           </span>
           <button
-            className={`${linksToBuy ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-300' } max-w-max m-auto p-2 px-4 rounded-md font-bold mt-4`}
+            className={`${linksToBuy ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-300'} max-w-max m-auto p-2 px-4 rounded-md font-bold mt-4`}
             onClick={upgradeTier}
           >
-            Upgrade
+            {!loading ? (
+              `Upgrade`
+            ) : (
+              <span className="flex gap-1 items-center">
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-green-800"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                {`Upgrading`}
+              </span>
+            )}
           </button>
         </div>
       </main>

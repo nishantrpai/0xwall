@@ -171,10 +171,14 @@
     let links = await fetchLinksFrmDB(domain);
     let { paywall, elements } = checkIfPaywall(window.location.href, links);
     if (paywall) {
-      paywallElements(elements, domain);
+      if(!window.ethereum) {
+        paywallElements(elements, domain);
+      }
+      
       if (window.ethereum) {
         let reader_account = await getReaderAccount();
         let tiers = await getTiers(reader_account, domain);
+        paywallElements(elements, domain);
         showElements(elements, tiers);
       }
     }
@@ -195,9 +199,9 @@
 
   window.addEventListener(
     "hashchange",
-    () => {
+    async () => {
       console.log("on hash changed");
-      runPayWallScript();
+      await runPayWallScript();
     },
     false
   );
@@ -207,11 +211,11 @@
       console.log("dom has been loaded");
       // init(window.location.href);
       document.body.addEventListener('click', () => {
-        requestAnimationFrame(() => {
+        requestAnimationFrame(async () => {
           if (windowurl !== window.location.href) {
             console.log("url changed");
             windowurl = window.location.href;
-            runPayWallScript();
+            await runPayWallScript();
           }
         });
       }, true);
