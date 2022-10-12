@@ -210,9 +210,9 @@
         requestAnimationFrame(() => {
           if (windowurl !== window.location.href) {
             console.log("url changed");
+            windowurl = window.location.href;
             runPayWallScript();
           }
-          windowurl = window.location.href;
         });
       }, true);
     }
