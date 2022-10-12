@@ -6,6 +6,8 @@
 
   let windowurl = window.location.href;
 
+  let readerLinks = [];
+
   let payWalledElement = {};
   async function fetchLinksFrmDB(domain) {
     let response = await fetch(`${API_URL}/api/link?domain=${domain}`);
@@ -91,6 +93,7 @@
   function showElements(elements, tiers, links) {
     elements.forEach((element) => {
       if (tiers.includes(element.tier_id)) {
+        readerLinks.push(element.link);
         setInnerHTML(document.querySelector(element.hash), payWalledElement[element.hash]);
       }
     });
@@ -132,7 +135,7 @@
     let elements = [];
     let paywall = false;
     for (let i = 0; i < allLinks.length; i++) {
-      if (matchPath(currentLocation, allLinks[i].link)) {
+      if (matchPath(currentLocation, allLinks[i].link) && !readerLinks.includes(allLinks[i].link)) {
         if (matchHashorSection(currentLocation, allLinks[i].link)) {
           paywall = true;
           elements.push({
