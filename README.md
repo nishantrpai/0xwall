@@ -47,15 +47,27 @@ book.com
 
 #### Carrd
 
-- Go to the editor of your Carrd website and add an "Embed" component.
+1. Go to the editor of your Carrd website and add an "Embed" component.
 
-- Change the type to "Code" and give it any name that you want.
+2. Change the type to "Code" and give it any name that you want.
 
-- Paste the above script
+3. Paste the above script
 
 That should be it.
 
+**Video:**
+
+[e_oseku](https://twitter.com/e_oseku) made a detailed [walk through](https://www.youtube.com/watch?v=QVI6SVj0Aqc) to integrate with your Carrd website.
+
 #### Webflow
+
+1. Go to dashboard.
+
+2. To sites.
+
+3. Select your website.
+
+4. Paste the script in custom code.
 
 [MT Jack](https://twitter.com/mtjack9) made a [walk-through](https://twitter.com/mtjack9/status/1579536799814537217) you can follow that.
 
