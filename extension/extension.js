@@ -4,6 +4,8 @@
 
   const API_URL = `:API_URL:`;
 
+  let windowurl = window.location.href;
+
   let payWalledElement = {};
   async function fetchLinksFrmDB(domain) {
     let response = await fetch(`${API_URL}/api/link?domain=${domain}`);
@@ -109,7 +111,7 @@
   function matchHashorSection(currentLocation, link) {
     let curl = new URL(`https://${formatURL(currentLocation)}`);
     let dblink = new URL(`https://${link}`);
-    if((curl.hash == dblink.hash) || document.querySelector(dblink.hash)) {
+    if ((curl.hash == dblink.hash) || document.querySelector(dblink.hash)) {
       return true;
     }
     return false;
@@ -199,10 +201,20 @@
     },
     false
   );
+
   document.onreadystatechange = function (e) {
     if (document.readyState === "complete") {
       console.log("dom has been loaded");
       // init(window.location.href);
+      document.body.addEventListener('click', () => {
+        requestAnimationFrame(() => {
+          if (windowurl !== window.location.href) {
+            console.log("url changed");
+            runPayWallScript();
+          }
+          windowurl = window.location.href;
+        });
+      }, true);
     }
   };
 })();
