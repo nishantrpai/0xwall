@@ -171,14 +171,10 @@
     let links = await fetchLinksFrmDB(domain);
     let { paywall, elements } = checkIfPaywall(window.location.href, links);
     if (paywall) {
-      if(!window.ethereum) {
-        paywallElements(elements, domain);
-      }
-      
+      paywallElements(elements, domain);
       if (window.ethereum) {
         let reader_account = await getReaderAccount();
         let tiers = await getTiers(reader_account, domain);
-        paywallElements(elements, domain);
         showElements(elements, tiers);
       }
     }
