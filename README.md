@@ -69,6 +69,8 @@ That should be it.
 
 4. Paste the script in custom code.
 
+**Video:**
+
 [MT Jack](https://twitter.com/mtjack9) made a [walk-through](https://twitter.com/mtjack9/status/1579536799814537217) you can follow that.
 
 PS: He did it while sipping coffee
