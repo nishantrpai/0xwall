@@ -211,7 +211,7 @@
           if (windowurl !== window.location.href) {
             console.log("url changed");
             windowurl = window.location.href;
-            await runPayWallScript();
+            init(window.location.href);
           }
         });
       }, true);
