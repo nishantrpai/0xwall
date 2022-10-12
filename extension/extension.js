@@ -190,7 +190,7 @@
   // FETCH ALL LINKS
   window.addEventListener("load", (event) => {
     console.log("dom has loaded completely");
-    init(window.location.href);
+    init();
   });
 
   // window.addEventListener(
@@ -211,7 +211,7 @@
           if (windowurl !== window.location.href) {
             console.log("url changed");
             windowurl = window.location.href;
-            runPayWallScript();
+            init();
           }
         });
       }, true);
