@@ -305,7 +305,7 @@ export default function Dashboard({ address, token }) {
 
                 <label className="text-sm font-bold mt-4">Name</label>
                 <input
-                  className="p-1 px-2 bg-gray-100 mt-2 w-full border rounded-md text-sm focus:bg-white"
+                  className="p-1 px-2 mt-2 w-full border rounded-md text-sm bg-gray-100 focus:bg-white"
                   placeholder="Enter the name for tier"
                   name="name"
                   onChange={handleTierUpdate}
@@ -323,7 +323,7 @@ export default function Dashboard({ address, token }) {
                 <div className="relative inline-flex text-sm">
                   <FiChevronDown className="w-4 h-4 absolute top-1 right-0 m-4 mr-2 text-gray-400 pointer-events-none" />
                   <select
-                    className="bg-gray-100 w-full mt-2 rounded-md text-sm text-gray-600 p-2 bg-white hover:border-gray-400 outline-none appearance-none"
+                    className="w-full mt-2 rounded-md text-sm text-gray-600 p-2 bg-white hover:border-gray-400 outline-none appearance-none bg-gray-100 focus:bg-white border"
                     onChange={handleTierUpdate}
                     defaultValue={tierData.type}
                     name="type"
