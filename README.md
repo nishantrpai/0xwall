@@ -81,6 +81,13 @@ PS: He did it while sipping coffee
 
 2. Paste script, you'll have to add `async` attribute. [Source](https://developer.chrome.com/blog/script-component/#sequencing-third-party-scripts-without-a-framework-component)
 
+#### Ghost
+
+1. In the "Menu", click "Settings", and then "Code Injection".
+
+2. Add script to the "Site Header" text box. Code added into the "Site Header" field is injected into the <head> tag on every page of your site.
+
+3. After adding the script, click on the "Save" button.
 
 
 ### Reader
