@@ -216,9 +216,9 @@
   }, true);
 
   document.onreadystatechange = function (e) {
+    init();
     if (document.readyState === "complete") {
       console.log("dom has been loaded");
-      // init(window.location.href);
     }
   };
 })();
