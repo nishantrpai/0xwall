@@ -66,7 +66,7 @@ export default function Home() {
                 {`<script src="https://0xwall.app/api/extension" defer></script>`}
               </span>
             </p>
-            <p className="flex flex-col text-gray-500 mt-2 flex gap-2 text-sm">3. That's it you should see a paywall on that link.</p>
+            <p className="flex flex-col text-gray-500 mt-2 flex gap-2 text-sm">3. That's it, you should see a paywall on that link.</p>
 
             <p className="text-gray-500 mt-4 flex gap-2 text-xs">Stack specific instructions in<a className="text-blue-500" target="_blank" href="https://github.com/nishantrpai/0xwall#how-to-use">README.md</a></p>
 
