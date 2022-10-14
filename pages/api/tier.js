@@ -10,11 +10,25 @@ const createAccount = async (writer_account) => {
     .insert([{ writer_account, service_tier: 10 }]);
 }
 
+// 1 domain can be associated with only 1 wallet
+const allowDomainToWallet = (writer_account, domains) => {
+  let allowed = true;
+  domains.forEach((domain) => {
+    if (domain.writer_account !== writer_account) {
+      allowed = false;
+    }
+  });
+  return allowed;
+}
+
 const addTier = async (req, res) => {
+  const token = req?.headers?.authorization;
+  let writer_account = await fetchAccount(token);
+
   const { tier, tiers } = JSON.parse(req.body);
 
   if (!validateFormData(tier)) {
-    res.send(200).json({ success: false, error: 'invalid data' });
+    res.status(400).json({ success: false, error: 'invalid data' });
   }
 
   let totalLinks = 0;
@@ -32,56 +46,67 @@ const addTier = async (req, res) => {
     contract_addr,
     token_balance,
     links,
-    writer_account,
   } = tier;
 
-  const { data: accountInfo } = await supabase
-    .from("paywall_service_tier")
-    .select("*")
-    .eq("writer_account", writer_account);
+  // check if domain has same wallet or none
+  const { data: domains } = await supabase
+    .from("paywall_link_tiers")
+    .select("writer_account")
+    .eq("domain", domain);
 
-  if (!accountInfo.length) {
-    await createAccount(writer_account);
-    accountInfo.push({ writer_account, service_tier: 10 });
+  if (!allowDomainToWallet(writer_account, domains)) {
+    res.status(400).json({ success: false, error: 'This domain has already been added from a different wallet' });
   }
 
-  if (totalLinks > accountInfo[0]?.service_tier) {
-    res.status(200).json({ success: false, error: "Exhausted total links" });
-  } else {
-    const { data: linkTiers, error: linkTierError } = await supabase
-      .from("paywall_link_tiers")
-      .insert([
-        {
-          writer_account,
-          name,
-          domain,
-          type,
-          price,
-          contract_addr,
-          token_balance,
-        },
-      ]);
+  else {
+    const { data: accountInfo } = await supabase
+      .from("paywall_service_tier")
+      .select("*")
+      .eq("writer_account", writer_account);
 
-    let tier_links = [];
-
-    for (let i = 0; i < links.length; i++) {
-      tier_links.push({
-        tier_id: linkTiers[0].id,
-        link: links[i],
-        writer_account,
-      });
+    if (!accountInfo.length) {
+      await createAccount(writer_account);
+      accountInfo.push({ writer_account, service_tier: 10 });
     }
 
-    const { data: writerLinks, error: writerError } = await supabase
-      .from("paywall_writer_links")
-      .insert(tier_links);
-
-    let addError = writerError || linkTierError;
-
-    if (!addError) {
-      res.status(200).json({ success: true });
+    if (totalLinks > accountInfo[0]?.service_tier) {
+      res.status(200).json({ success: false, error: "Exhausted total links" });
     } else {
-      res.status(200).json({ success: false, error: addError });
+      const { data: linkTiers, error: linkTierError } = await supabase
+        .from("paywall_link_tiers")
+        .insert([
+          {
+            writer_account,
+            name,
+            domain,
+            type,
+            price,
+            contract_addr,
+            token_balance,
+          },
+        ]);
+
+      let tier_links = [];
+
+      for (let i = 0; i < links.length; i++) {
+        tier_links.push({
+          tier_id: linkTiers[0].id,
+          link: links[i],
+          writer_account,
+        });
+      }
+
+      const { data: writerLinks, error: writerError } = await supabase
+        .from("paywall_writer_links")
+        .insert(tier_links);
+
+      let addError = writerError || linkTierError;
+
+      if (!addError) {
+        res.status(200).json({ success: true });
+      } else {
+        res.status(200).json({ success: false, error: addError });
+      }
     }
   }
 };
@@ -114,10 +139,12 @@ const fetchTiers = async (req, res) => {
 };
 
 const editTier = async (req, res) => {
+  const token = req?.headers?.authorization;
+  let writer_account = await fetchAccount(token);
   let { tier, tiers } = JSON.parse(req.body);
-  
+
   if (!validateFormData(tier)) {
-    res.send(200).json({ success: false, error: 'invalid data' });
+    res.status(400).json({ success: false, error: 'invalid data' });
   }
 
   let {
@@ -129,56 +156,67 @@ const editTier = async (req, res) => {
     token_balance,
     id,
     links,
-    writer_account,
   } = tier;
   let tier_links = [];
 
-  let totalLinks = 0;
-  Object.keys(tiers).map((tier) => {
-    totalLinks += tiers[tier].links.length;
-  });
+  // check if domain has same wallet or none
+  const { data: domains } = await supabase
+    .from("paywall_link_tiers")
+    .select("writer_account")
+    .eq("domain", domain);
 
-  for (let i = 0; i < links.length; i++) {
-    tier_links.push({
-      tier_id: id,
-      link: links[i],
-      writer_account,
+  if (!allowDomainToWallet(writer_account, domains)) {
+    res.status(400).json({ success: false, error: 'This domain has already been added from a different wallet' });
+  }
+
+  else {
+    let totalLinks = 0;
+    Object.keys(tiers).map((tier) => {
+      totalLinks += tiers[tier].links.length;
     });
-  }
 
-  const { data: accountInfo } = await supabase
-    .from("paywall_service_tier")
-    .select("*")
-    .eq("writer_account", writer_account);
+    for (let i = 0; i < links.length; i++) {
+      tier_links.push({
+        tier_id: id,
+        link: links[i],
+        writer_account,
+      });
+    }
 
-  if (!accountInfo.length) {
-    createAccount(writer_account);
-    accountInfo.push({ writer_account, service_tier: 10 });
-  }
+    const { data: accountInfo } = await supabase
+      .from("paywall_service_tier")
+      .select("*")
+      .eq("writer_account", writer_account);
 
-  if (totalLinks > accountInfo[0]?.service_tier) {
-    res.status(200).json({ success: false, error: "Exhausted total links" });
-  } else {
-    const { error: linkTierError } = await supabase
-      .from("paywall_link_tiers")
-      .update({ name, domain, type, price, contract_addr, token_balance })
-      .match({ id });
+    if (!accountInfo.length) {
+      createAccount(writer_account);
+      accountInfo.push({ writer_account, service_tier: 10 });
+    }
 
-    const { error: linkError } = await supabase
-      .from("paywall_writer_links")
-      .delete()
-      .match({ tier_id: id });
-
-    const { error } = await supabase
-      .from("paywall_writer_links")
-      .upsert(tier_links, { onConflict: "link" });
-
-    let updateError = error || linkError || linkTierError;
-
-    if (!updateError) {
-      res.status(200).json({ success: true });
+    if (totalLinks > accountInfo[0]?.service_tier) {
+      res.status(200).json({ success: false, error: "Exhausted total links" });
     } else {
-      res.status(200).json({ success: false, updateError });
+      const { error: linkTierError } = await supabase
+        .from("paywall_link_tiers")
+        .update({ name, domain, type, price, contract_addr, token_balance })
+        .match({ id });
+
+      const { error: linkError } = await supabase
+        .from("paywall_writer_links")
+        .delete()
+        .match({ tier_id: id });
+
+      const { error } = await supabase
+        .from("paywall_writer_links")
+        .upsert(tier_links, { onConflict: "link" });
+
+      let updateError = error || linkError || linkTierError;
+
+      if (!updateError) {
+        res.status(200).json({ success: true });
+      } else {
+        res.status(200).json({ success: false, updateError });
+      }
     }
   }
 };
