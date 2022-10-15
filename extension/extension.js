@@ -90,7 +90,7 @@
     });
   }
 
-  function showElements(elements, tiers, links) {
+  function showElements(elements, tiers) {
     elements.forEach((element) => {
       if (tiers.includes(element.tier_id)) {
         readerLinks.push(element.link);
