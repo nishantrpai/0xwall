@@ -30,8 +30,7 @@ export default function Dashboard({ address, token }) {
     [token]
   );
 
-  // const { data: products = [] } = useSWR([`/api/tx?reader_account=${writerAccount}&source=dashboard`, config], fetcher);
-  const products = []; 
+  const { data: products = [] } = useSWR([`/api/tx?reader_account=${writerAccount}&source=dashboard`, config], fetcher);
   
   return (
     <div className="container">
