@@ -370,40 +370,40 @@
     script.onload = runPayWallScript();
   }
 
-  // FETCH ALL LINKS
-  window.addEventListener("load", (event) => {
-    console.log("dom has loaded completely");
-    // init();
-  });
-
-  window.addEventListener(
-    "hashchange",
-    async () => {
-      console.log("on hash changed");
-      await runPayWallScript();
-    },
-    false
-  );
-
-  window.addEventListener('click', () => {
-    requestAnimationFrame(async () => {
-      if (windowurl !== window.location.href) {
-        console.log("url changed");
-        windowurl = window.location.href;
-        await runPayWallScript();
-      }
-    });
-  }, true);
-
-  document.onreadystatechange = function (e) {
-    if (document.readyState === "complete") {
-      console.log("dom has been loaded");
-      init();
-    }
-  };
-
-  if(!Modernizr.eventlistener) {
+  if (!Modernizr.eventlistener) {
     window.location.href = "https://browser-update.org/update-browser.html";
+  } else {
+    // FETCH ALL LINKS
+    window.addEventListener("load", (event) => {
+      console.log("dom has loaded completely");
+      // init();
+    });
+
+    window.addEventListener(
+      "hashchange",
+      async () => {
+        console.log("on hash changed");
+        await runPayWallScript();
+      },
+      false
+    );
+
+    window.addEventListener('click', () => {
+      requestAnimationFrame(async () => {
+        if (windowurl !== window.location.href) {
+          console.log("url changed");
+          windowurl = window.location.href;
+          await runPayWallScript();
+        }
+      });
+    }, true);
+
+    document.onreadystatechange = function (e) {
+      if (document.readyState === "complete") {
+        console.log("dom has been loaded");
+        init();
+      }
+    };
   }
 
 })(window, document);
