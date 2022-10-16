@@ -1,24 +1,13 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import useSWR from "swr";
 import { fetcher, humanizeWallet } from "util/index";
 import Image from "next/image";
 import DashboardLayout from "layouts/dashboard";
 import {
-  FiChevronDown,
-  FiEdit,
   FiExternalLink,
-  FiPlus,
-  FiTrash,
-  FiX,
 } from "react-icons/fi";
-import Modal from "components/Modal";
-import { validateFormData, validateValue } from "util/validate";
-import { useRouter } from "next/router";
 
 export default function Dashboard({ address, token }) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
   const writerAccount = address?.toLowerCase();
 
   const config = useMemo(
@@ -31,7 +20,7 @@ export default function Dashboard({ address, token }) {
   );
 
   const { data: products = [] } = useSWR([`/api/tx?reader_account=${writerAccount}&source=dashboard`, config], fetcher);
-  
+
   return (
     <div className="container">
       <main>
