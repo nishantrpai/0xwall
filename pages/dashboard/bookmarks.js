@@ -41,7 +41,7 @@ export default function Dashboard({ address, token }) {
               <div className="tier-links mt-2 flex flex-col gap-2">
                 {product["tier"]?.links?.map((tierLink, index) => (
                   <a
-                    className="flex gap-2 items-center tier-link text-sm text-gray-500 hover:text-blue-800"
+                    className="flex gap-2 items-center tier-link text-sm text-gray-500 hover:text-gray-800"
                     key={index}
                     href={`https://${tierLink.link}`}
                     target="_blank"
