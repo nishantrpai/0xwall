@@ -1,6 +1,6 @@
 import Navbar from "components/Navbar";
 import TabItem from "components/TabItem";
-import { FiBarChart, FiLink, FiSettings } from "react-icons/fi";
+import { FiBarChart, FiBookmark, FiLink, FiSettings } from "react-icons/fi";
 import useMetaMask from "hooks/metamask";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -21,6 +21,7 @@ export default function Layout({ children }) {
       <div className="flex gap-4 mt-2 border-b-2 py-2">
         <TabItem name="Readers" icon={<FiBarChart />} link="/dashboard" />
         <TabItem name="Links" icon={<FiLink />} link="/dashboard/links" />
+        <TabItem name="Bookmarks" icon={<FiBookmark />} link="/dashboard/bookmarks" />
         <TabItem
           name="Upgrade"
           icon={<FiSettings />}
