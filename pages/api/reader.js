@@ -64,6 +64,7 @@ const getReaders = async (req, res) => {
       if (!readertxs[reader.paywall_link_tiers.id]) {
         readertxs[reader.paywall_link_tiers.id] = {};
         readertxs[reader.paywall_link_tiers.id].txDates = [
+          { name: "2022-10-09T15:40:47.876996+00:00", value: 0 },
           { name: reader.created_at, value: parseFloat(reader.value) },
         ];
         readertxs[reader.paywall_link_tiers.id].name =
@@ -118,12 +119,12 @@ const getReaders = async (req, res) => {
     readers.map((reader) =>
       readertxs[reader.paywall_link_tiers.id].txDates.map(
         (txDate) =>
-          (txDate.name = new Date(txDate.name).toLocaleDateString("en-us", {
-            weekday: "long",
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          }))
+        (txDate.name = new Date(txDate.name).toLocaleDateString("en-us", {
+          weekday: "long",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }))
       )
     );
 

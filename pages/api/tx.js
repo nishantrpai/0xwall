@@ -54,7 +54,7 @@ const getTx = async (req, res) => {
   if (source == "dashboard") {
     const { data: purchases = [], error: purchasesErr } = await supabase
       .from("paywall_reader_tx")
-      .select(`tx, tier:paywall_link_tiers(domain, links:paywall_writer_links (link))`)
+      .select(`tx, created_at, tier:paywall_link_tiers(domain, links:paywall_writer_links (link))`)
       .eq("reader_account", reader_account);
     if (!purchasesErr)
       res.status(200).json(purchases);
