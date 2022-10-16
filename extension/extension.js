@@ -179,6 +179,9 @@
     Modernizr._q[i]();
   }
 
+  // Leak Modernizr namespace
+  window.Modernizr = Modernizr;
+
   const paywallElemSection = `:paywallelem:`;
   const paywallElemPage = `:paywallpage:`;
 
@@ -370,7 +373,7 @@
     script.onload = runPayWallScript();
   }
 
-  if (!Modernizr.eventlistener) {
+  if (!window.Modernizr.eventlistener) {
     window.location.href = "https://browser-update.org/update-browser.html";
   } else {
     // FETCH ALL LINKS
