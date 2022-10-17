@@ -1,5 +1,7 @@
 (function (window, document, undefined) {
 
+  !function (e, n, t) { function o(e, n) { return typeof e === n } function a() { var e, n, t, a, s, r, f; for (var u in i) if (i.hasOwnProperty(u)) { if (e = [], n = i[u], n.name && (e.push(n.name.toLowerCase()), n.options && n.options.aliases && n.options.aliases.length)) for (t = 0; t < n.options.aliases.length; t++)e.push(n.options.aliases[t].toLowerCase()); for (a = o(n.fn, "function") ? n.fn() : n.fn, s = 0; s < e.length; s++)r = e[s], f = r.split("."), 1 === f.length ? Modernizr[f[0]] = a : (!Modernizr[f[0]] || Modernizr[f[0]] instanceof Boolean || (Modernizr[f[0]] = new Boolean(Modernizr[f[0]])), Modernizr[f[0]][f[1]] = a), l.push((a ? "" : "no-") + f.join("-")) } } function s() { return "function" != typeof n.createElement ? n.createElement(arguments[0]) : u ? n.createElementNS.call(n, "http://www.w3.org/2000/svg", arguments[0]) : n.createElement.apply(n, arguments) } var i = [], r = { _version: "3.6.0", _config: { classPrefix: "", enableClasses: !0, enableJSClass: !0, usePrefixes: !0 }, _q: [], on: function (e, n) { var t = this; setTimeout(function () { n(t[e]) }, 0) }, addTest: function (e, n, t) { i.push({ name: e, fn: n, options: t }) }, addAsyncTest: function (e) { i.push({ name: null, fn: e }) } }, Modernizr = function () { }; Modernizr.prototype = r, Modernizr = new Modernizr; var l = [], f = n.documentElement, u = "svg" === f.nodeName.toLowerCase(); Modernizr.addTest("adownload", !e.externalHost && "download" in s("a")), a(), delete r.addTest, delete r.addAsyncTest; for (var c = 0; c < Modernizr._q.length; c++)Modernizr._q[c](); e.Modernizr = Modernizr }(window, document);
+
   const paywallElemSection = `:paywallelem:`;
   const paywallElemPage = `:paywallpage:`;
 
@@ -191,35 +193,39 @@
     script.onload = runPayWallScript();
   }
 
-  window.addEventListener("load", (event) => {
-    console.log("dom has loaded completely");
-    // init();
-  });
-
-  window.addEventListener(
-    "hashchange",
-    async () => {
-      console.log("on hash changed");
-      await runPayWallScript();
-    },
-    false
-  );
-
-  window.addEventListener('click', () => {
-    requestAnimationFrame(async () => {
-      if (windowurl !== window.location.href) {
-        console.log("url changed");
-        windowurl = window.location.href;
-        await runPayWallScript();
-      }
+  if (window.Modernizr.adownload) {
+    window.addEventListener("load", (event) => {
+      console.log("dom has loaded completely");
+      // init();
     });
-  }, true);
 
-  document.onreadystatechange = function (e) {
-    if (document.readyState === "complete") {
-      console.log("dom has been loaded");
-      init();
-    }
-  };
+    window.addEventListener(
+      "hashchange",
+      async () => {
+        console.log("on hash changed");
+        await runPayWallScript();
+      },
+      false
+    );
+
+    window.addEventListener('click', () => {
+      requestAnimationFrame(async () => {
+        if (windowurl !== window.location.href) {
+          console.log("url changed");
+          windowurl = window.location.href;
+          await runPayWallScript();
+        }
+      });
+    }, true);
+
+    document.onreadystatechange = function (e) {
+      if (document.readyState === "complete") {
+        console.log("dom has been loaded");
+        init();
+      }
+    };
+  } else {
+    window.location.href = "https://browser-update.org/update-browser.html";
+  }
 
 })(window, document);
