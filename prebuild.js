@@ -2,8 +2,13 @@ const babel = require("@babel/core");
 const path = require("path");
 const fs = require("fs").promises;
 const UglifyJS = require("uglify-js");
+const { loadEnvConfig } = require("@next/env");
+
+loadEnvConfig(process.cwd());
 
 async function compile() {
+  console.log("compiling extension script");
+
   let extensionDirectory = path.join(process.cwd(), "extension");
 
   const presets = ["@babel/preset-env"];
@@ -59,7 +64,8 @@ async function compile() {
 
   fileContents = fileContents.replace(":paywallelem:", paywallSectionHTML);
   fileContents = fileContents.replace(":paywallpage:", paywallPageHTML);
-  fileContents = fileContents.replace(":API_URL:", process.env.API_URL);
+
+  fileContents = fileContents.replaceAll(":API_URL:", process.env.API_URL);
 
   const { code: extension } = babel.transform(fileContents, {
     presets,
@@ -75,5 +81,6 @@ async function compile() {
       console.log("Saved!");
     }
   );
+  return "built";
 }
 compile().then(console.log);

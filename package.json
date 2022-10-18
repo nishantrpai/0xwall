@@ -3,8 +3,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "prebuild": "node prebuild.js",
     "start": "next start",
-    "compile": "node compile.js",
     "prepare": "husky install",
     "pre-commit": "lint-staged"
   },
