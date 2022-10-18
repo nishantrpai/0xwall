@@ -8,6 +8,10 @@
     "pre-commit": "lint-staged"
   },
   "dependencies": {
+    "@babel/core": "^7.19.3",
+    "@babel/plugin-transform-async-to-generator": "^7.18.6",
+    "@babel/plugin-transform-template-literals": "^7.18.9",
+    "@babel/preset-env": "^7.19.4",
     "@3rdweb/hooks": "^1.9.2",
     "@3rdweb/react": "^1.9.3",
     "@3rdweb/sdk": "^1.42.1",
@@ -32,10 +36,6 @@
     "web3-token": "^1.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
-    "@babel/plugin-transform-async-to-generator": "^7.18.6",
-    "@babel/plugin-transform-template-literals": "^7.18.9",
-    "@babel/preset-env": "^7.19.4",
     "autoprefixer": "^10.4.12",
     "babel-loader": "^8.2.5",
     "husky": "^8.0.0",
