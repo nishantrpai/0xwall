@@ -1,5 +1,4 @@
 (function (window, document, undefined) {
-
   const paywallElemSection = `:paywallelem:`;
   const paywallElemPage = `:paywallpage:`;
 
@@ -52,20 +51,21 @@
       )}</a>`;
       btnStyle = "btn-checkout-tx";
     } else {
-      requirement = `&nbsp;Unlocking this page requires ${token_balance} ${parseInt(token_balance) > 1 ? "tokens" : "token"
-        } of <a href="https://etherscan.io/token/${contract_addr}" target="_blank">${humanizeWallet(
-          contract_addr
-        )}</a></span>`;
+      requirement = `&nbsp;Unlocking this page requires ${token_balance} ${
+        parseInt(token_balance) > 1 ? "tokens" : "token"
+      } of <a href="https://etherscan.io/token/${contract_addr}" target="_blank">${humanizeWallet(
+        contract_addr
+      )}</a></span>`;
       btnStyle = "btn-checkout-token";
     }
-    paywallhtml = paywallhtml.replaceAll(":btn-style:", btnStyle);
-    paywallhtml = paywallhtml.replaceAll(":price:", `Pay ${price}Ξ`);
-    paywallhtml = paywallhtml.replaceAll(":txprice:", price);
-    paywallhtml = paywallhtml.replaceAll(":requirement:", requirement);
-    paywallhtml = paywallhtml.replaceAll(":writer_account:", writer_account);
-    paywallhtml = paywallhtml.replaceAll(":domain:", domain);
-    paywallhtml = paywallhtml.replaceAll(":api_url:", API_URL);
-    paywallhtml = paywallhtml.replaceAll(":link:", encodeURI(link));
+    paywallhtml = paywallhtml.replace(/:btn-style:/g, btnStyle);
+    paywallhtml = paywallhtml.replace(/:price:/g, `Pay ${price}Ξ`);
+    paywallhtml = paywallhtml.replace(/:txprice:/g, price);
+    paywallhtml = paywallhtml.replace(/:requirement:/g, requirement);
+    paywallhtml = paywallhtml.replace(/:writer_account:/g, writer_account);
+    paywallhtml = paywallhtml.replace(/:domain:/g, domain);
+    paywallhtml = paywallhtml.replace(/:api_url:/g, API_URL);
+    paywallhtml = paywallhtml.replace(/:link:/g, encodeURI(link));
     return paywallhtml;
   }
 
@@ -95,13 +95,19 @@
     elements.forEach((element) => {
       if (tiers.includes(element.tier_id)) {
         readerLinks.push(element.link);
-        setInnerHTML(document.querySelector(element.hash), payWalledElement[element.hash]);
+        setInnerHTML(
+          document.querySelector(element.hash),
+          payWalledElement[element.hash]
+        );
       }
     });
   }
 
   function formatURL(url) {
-    return url.replace('https://', '').replace('http://', '').replace('www.', '');
+    return url
+      .replace("https://", "")
+      .replace("http://", "")
+      .replace("www.", "");
   }
 
   function matchPath(currentLocation, link) {
@@ -115,7 +121,7 @@
   function matchHashorSection(currentLocation, link) {
     let curl = new URL(`https://${formatURL(currentLocation)}`);
     let dblink = new URL(`https://${link}`);
-    if ((curl.hash == dblink.hash) || document.querySelector(dblink.hash)) {
+    if (curl.hash == dblink.hash || document.querySelector(dblink.hash)) {
       return true;
     }
     return false;
@@ -131,12 +137,14 @@
     return element;
   }
 
-
   function checkIfPaywall(currentLocation, allLinks) {
     let elements = [];
     let paywall = false;
     for (let i = 0; i < allLinks.length; i++) {
-      if (matchPath(currentLocation, allLinks[i].link) && !readerLinks.includes(allLinks[i].link)) {
+      if (
+        matchPath(currentLocation, allLinks[i].link) &&
+        !readerLinks.includes(allLinks[i].link)
+      ) {
         if (matchHashorSection(currentLocation, allLinks[i].link)) {
           paywall = true;
           elements.push({
@@ -171,7 +179,7 @@
 
   async function runPayWallScript() {
     console.log("check paywall");
-    let domain = window.location.hostname.replace('www.', '');
+    let domain = window.location.hostname.replace("www.", "");
     let links = await fetchLinksFrmDB(domain);
     let { paywall, elements } = checkIfPaywall(window.location.href, links);
     if (paywall) {
@@ -205,15 +213,19 @@
     false
   );
 
-  window.addEventListener('click', () => {
-    requestAnimationFrame(async () => {
-      if (windowurl !== window.location.href) {
-        console.log("url changed");
-        windowurl = window.location.href;
-        await runPayWallScript();
-      }
-    });
-  }, true);
+  window.addEventListener(
+    "click",
+    () => {
+      requestAnimationFrame(async () => {
+        if (windowurl !== window.location.href) {
+          console.log("url changed");
+          windowurl = window.location.href;
+          await runPayWallScript();
+        }
+      });
+    },
+    true
+  );
 
   document.onreadystatechange = function (e) {
     if (document.readyState === "complete") {
@@ -221,5 +233,4 @@
       init();
     }
   };
-
 })(window, document);
