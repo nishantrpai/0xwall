@@ -1,5 +1,4 @@
 module.exports = {
-  webpack5: false,
   env: {
     SUPABASE_KEY: process.env.SUPABASE_KEY,
     SUPABASE_URL: process.env.SUPABASE_URL,
