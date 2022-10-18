@@ -11,7 +11,15 @@ async function compile() {
 
   let extensionDirectory = path.join(process.cwd(), "extension");
 
-  const presets = ["@babel/preset-env"];
+  const presets = [
+    [
+      "@babel/preset-env",
+      {
+        useBuiltIns: "entry",
+        corejs: "3.22",
+      },
+    ],
+  ];
 
   const plugins = [
     "@babel/plugin-transform-async-to-generator",
