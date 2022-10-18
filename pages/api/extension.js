@@ -66,5 +66,5 @@ export default async function handler(req, res) {
     plugins,
   });
   let extensionMinify = UglifyJS.minify(extension);
-  res.status(200).send(extension);
+  res.status(200).send(extensionMinify.code);
 }
