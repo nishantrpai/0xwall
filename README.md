@@ -39,7 +39,7 @@ book.com
 
 6. Go to your website source code.
 
-7. Paste this in the <head> tag:
+7. Paste this in the `<head>` tag:
 
 ```
   <script src="https://0xwall.app/api/extension" defer></script>
