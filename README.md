@@ -37,7 +37,7 @@ book.com/chapter2
 Domain will be:
 book.com
 
-6. Go to your website.
+6. Go to your website source code.
 
 7. Paste:
 
