@@ -1,5 +1,5 @@
 if (!window.ethereum) {
-  if (!window.navigator.userAgentData.mobile) {
+  if (!(window.screen.width <= 768)) {
     document.getElementById("install-mm").innerHTML =
       "Install <a href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en' target='_blank'> Metamask </a>";
   } else {
