@@ -71,18 +71,7 @@ export const verifyTransaction = async (
         "function supportsInterface(bytes4 interfaceID) external view returns (bool)",
       ];
       let contract = new ethers.Contract(contract_addr, interfaceabi, provider);
-      let isERC721 = await contract.supportsInterface(0x80ac58cd);
       let isERC1155 = await contract.supportsInterface(0xd9b67a26);
-
-      if (isERC721) {
-        let erc721abi = ["function balanceOf(address) view returns (uint)"];
-        let erc721contract = new ethers.Contract(
-          contract_addr,
-          erc721abi,
-          provider
-        );
-        chainbalance = await erc721contract.balanceOf(from);
-      }
 
       if (isERC1155) {
         let erc1155abi = [
@@ -94,6 +83,14 @@ export const verifyTransaction = async (
           provider
         );
         chainbalance = await erc1155contract.balanceOf(from, tokenId);
+      } else {
+        let erc721abi = ["function balanceOf(address) view returns (uint)"];
+        let erc721contract = new ethers.Contract(
+          contract_addr,
+          erc721abi,
+          provider
+        );
+        chainbalance = await erc721contract.balanceOf(from);
       }
 
       chainbalance =
