@@ -41,6 +41,16 @@
       </span>
       <span id="checkout-price"> :price: </span>
     </button>
+    <div class=":token-ctr:">
+      <input
+        id="token-id"
+        data-contract=":contract_addr:"
+        data-balance=":token_balance:"
+        class="isERC1155-input"
+        placeholder="Enter token id"
+      />
+      <button id="checkout-btn" onclick="verifyTokenId()">Verify</button>
+    </div>
     <div id="install-mm"></div>
     <div class="app-link">
       <a href="https://0xwall.app">⚡ 0xwall.app</a>

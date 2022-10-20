@@ -31,7 +31,7 @@
     return `${account.substr(0, 5)}...${account.substr(-3)}`;
   }
 
-  function getPayWallHTML(
+  async function getPayWallHTML(
     elementHash,
     price,
     type,
@@ -45,6 +45,7 @@
       elementHash == "body" ? paywallElemPage : paywallElemSection;
     let requirement;
     let btnStyle;
+    let tokenCtr = "erc721-ctr";
     if (type == "tx") {
       requirement = `Unlock requires a transaction of ${price}Ξ to <a href="https://etherscan.io/address/${writer_account}" target="_blank">${humanizeWallet(
         writer_account
@@ -56,9 +57,28 @@
       } of <a href="https://etherscan.io/token/${contract_addr}" target="_blank">${humanizeWallet(
         contract_addr
       )}</a></span>`;
+
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        let interfaceabi = [
+          "function supportsInterface(bytes4 interfaceID) external view returns (bool)",
+        ];
+        let contract = new ethers.Contract(
+          contract_addr,
+          interfaceabi,
+          provider
+        );
+        let isERC1155 = await contract.supportsInterface(0xd9b67a26);
+        if (isERC1155) {
+          tokenCtr = "erc1155-ctr";
+        }
+      }
       btnStyle = "btn-checkout-token";
     }
     paywallhtml = paywallhtml.replace(/:btn-style:/g, btnStyle);
+    paywallhtml = paywallhtml.replace(/:contract_addr:/g, contract_addr);
+    paywallhtml = paywallhtml.replace(/:token_balance:/g, token_balance);
+    paywallhtml = paywallhtml.replace(/:token-ctr:/g, tokenCtr);
     paywallhtml = paywallhtml.replace(/:price:/g, `Pay ${price}Ξ`);
     paywallhtml = paywallhtml.replace(/:txprice:/g, price);
     paywallhtml = paywallhtml.replace(/:requirement:/g, requirement);
@@ -70,24 +90,23 @@
   }
 
   function paywallElements(elements, domain) {
-    elements.forEach((element) => {
+    elements.forEach(async (element) => {
       payWalledElement[element.hash] = document.querySelector(
         element.hash
       ).innerHTML;
 
-      setInnerHTML(
-        document.querySelector(element.hash),
-        getPayWallHTML(
-          element.hash,
-          element.price,
-          element.type,
-          element.contract_addr,
-          element.token_balance,
-          element.writer_account,
-          domain,
-          element.link
-        )
+      let paywalledElement = await getPayWallHTML(
+        element.hash,
+        element.price,
+        element.type,
+        element.contract_addr,
+        element.token_balance,
+        element.writer_account,
+        domain,
+        element.link
       );
+
+      setInnerHTML(document.querySelector(element.hash), paywalledElement);
     });
   }
 

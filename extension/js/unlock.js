@@ -54,3 +54,46 @@ async function unlockPayWall() {
     }
   }
 }
+
+async function verifyTokenId() {
+  console.log("verify Token");
+  let tokenId = document.getElementById("token-id").value.trim();
+  let contract = document.getElementById("token-id").dataset.contract;
+  let tokenBalance = document.getElementById("token-id").dataset.balance;
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const accounts = await provider.send("eth_requestAccounts", []);
+  let reader_account = accounts[0];
+
+  let erc1155abi = [
+    "function balanceOf(address _owner, uint256 _id) external view returns (uint256)",
+  ];
+  let erc1155contract = new ethers.Contract(contract, erc1155abi, provider);
+  let chainbalance = await erc1155contract.balanceOf(reader_account, tokenId);
+  chainbalance = (ethers.utils.formatUnits(chainbalance, 18) / 1) * 10 ** 18;
+
+  // TODO: change check operation based on backend relation min,gte,eq
+  if (chainbalance >= tokenBalance) {
+    console.log("make api request");
+    let addTxResp = await fetch(":api_url:/api/reader", {
+      method: "POST",
+      body: JSON.stringify({
+        reader_account,
+        type: "erc1155",
+        tokenId,
+        link: ":link:",
+      }),
+    });
+    let { success } = await addTxResp.json();
+    if (success) {
+      document.getElementById("checkout-btn").innerHTML =
+        '<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+    } else {
+      document.getElementById("checkout-btn").innerHTML =
+        '<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+    }
+  }
+  // get token_balance
+  // if the contract has balance >=  token_balance
+  // add to db
+  // if added to db, reload
+}

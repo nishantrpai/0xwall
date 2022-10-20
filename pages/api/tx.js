@@ -6,7 +6,8 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const getTx = async (req, res) => {
   let tier_id = [];
   let author = false;
-  const { reader_account, domain, source = 'paywall' } = req.query;
+  let { reader_account, domain, source = "paywall" } = req.query;
+  reader_account = reader_account.toLowerCase();
   if (source == "paywall") {
     const { data: txs, error: txsErr } = await supabase
       .from("paywall_reader_tx")
@@ -35,6 +36,16 @@ const getTx = async (req, res) => {
         tier_id.push(tokenTxs[i].id);
       }
     }
+    // check if there are tiers with erc1155 token type
+    const { data: erc1155txs, error: erc1155txsErr } = await supabase
+      .from("paywall_reader_erc1155")
+      .select("tier_id, paywall_link_tiers!inner(*)")
+      .eq("reader_account", reader_account)
+      .eq("paywall_link_tiers.domain", domain);
+
+    for (let i = 0; i < erc1155txs.length; i++) {
+      tier_id.push(erc1155txs[i].paywall_link_tiers.id);
+    }
 
     let { data: links } = await supabase
       .from("paywall_writer_links")
@@ -54,12 +65,12 @@ const getTx = async (req, res) => {
   if (source == "dashboard") {
     const { data: purchases = [], error: purchasesErr } = await supabase
       .from("paywall_reader_tx")
-      .select(`tx, created_at, tier:paywall_link_tiers(domain, links:paywall_writer_links (link))`)
+      .select(
+        `tx, created_at, tier:paywall_link_tiers(domain, links:paywall_writer_links (link))`
+      )
       .eq("reader_account", reader_account);
-    if (!purchasesErr)
-      res.status(200).json(purchases);
-    else
-      res.status(400).json({ error: purchasesErr });
+    if (!purchasesErr) res.status(200).json(purchases);
+    else res.status(400).json({ error: purchasesErr });
   }
 };
 

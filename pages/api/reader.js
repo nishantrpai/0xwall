@@ -13,13 +13,17 @@ const dateDiff = (timestamp1, timestamp2) => {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 };
 
-const addReader = async (req, res) => {
+const addTxReader = async (req, res) => {
   let { reader_account, tx, link, value } = JSON.parse(req.body);
   reader_account = reader_account.toLowerCase();
   let { data: tiers, error: tierErrors } = await supabase
     .from("paywall_writer_links")
     .select("tier_id, writer_account, paywall_link_tiers!inner(*)")
     .eq("link", link);
+
+  if (tierErrors) {
+    res.status(400).json({ success: false });
+  }
 
   let { tier_id, paywall_link_tiers } = tiers[0];
   let from = reader_account; //reader account
@@ -39,8 +43,62 @@ const addReader = async (req, res) => {
     } else {
       res.status(200).json({ success: false });
     }
+  }
+};
+
+const addERC1155Reader = async (req, res) => {
+  let { reader_account, link, tokenId } = JSON.parse(req.body);
+  reader_account = reader_account.toLowerCase();
+  let { data: tiers, error: tierErrors } = await supabase
+    .from("paywall_writer_links")
+    .select("tier_id, writer_account, paywall_link_tiers!inner(*)")
+    .eq("link", link);
+
+  if (tierErrors) {
+    res.status(400).json({ success: false });
+  }
+
+  let { tier_id, paywall_link_tiers } = tiers[0];
+  let owned = await verifyTransaction(
+    "verifyToken",
+    "",
+    reader_account,
+    paywall_link_tiers,
+    tokenId
+  );
+
+  if (owned) {
+    let { data: readerERC1155s } = await supabase
+      .from("paywall_reader_erc1155")
+      .select("tier_id, reader_account")
+      .eq("reader_account", reader_account)
+      .eq("tier_id", tier_id);
+
+    if (readerERC1155s.length == 0) {
+      const { error: dberror } = await supabase
+        .from("paywall_reader_erc1155")
+        .insert([{ reader_account, token_id: tokenId, tier_id }]);
+      if (!dberror) {
+        res.status(200).json({ success: true });
+      } else {
+        res.status(400).json({ success: false });
+      }
+    } else {
+      res.status(400).json({ success: false });
+    }
   } else {
-    res.status(200).json({ success: false });
+    res.status(400).json({ success: false });
+  }
+};
+
+const addReader = async (req, res) => {
+  let { type = "tx" } = JSON.parse(req.body);
+  if (type == "tx") {
+    addTxReader(req, res);
+  }
+
+  if (type == "erc1155") {
+    addERC1155Reader(req, res);
   }
 };
 
@@ -119,12 +177,12 @@ const getReaders = async (req, res) => {
     readers.map((reader) =>
       readertxs[reader.paywall_link_tiers.id].txDates.map(
         (txDate) =>
-        (txDate.name = new Date(txDate.name).toLocaleDateString("en-us", {
-          weekday: "long",
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        }))
+          (txDate.name = new Date(txDate.name).toLocaleDateString("en-us", {
+            weekday: "long",
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          }))
       )
     );
 

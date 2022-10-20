@@ -29,7 +29,8 @@ export const verifyTransaction = async (
   source,
   hash,
   from,
-  paywall_link_tiers
+  paywall_link_tiers,
+  tokenId = ""
 ) => {
   try {
     const provider = new ethers.providers.EtherscanProvider(
@@ -64,12 +65,40 @@ export const verifyTransaction = async (
     }
 
     if (type == "token") {
-      let abi = ["function balanceOf(address) view returns (uint)"];
-      let contract = new ethers.Contract(contract_addr, abi, provider);
-      let chainbalance = await contract.balanceOf(from);
-      // TODO: change to use both big numbers
+      let chainbalance = 0;
+
+      let interfaceabi = [
+        "function supportsInterface(bytes4 interfaceID) external view returns (bool)",
+      ];
+      let contract = new ethers.Contract(contract_addr, interfaceabi, provider);
+      let isERC721 = await contract.supportsInterface(0x80ac58cd);
+      let isERC1155 = await contract.supportsInterface(0xd9b67a26);
+
+      if (isERC721) {
+        let erc721abi = ["function balanceOf(address) view returns (uint)"];
+        let erc721contract = new ethers.Contract(
+          contract_addr,
+          erc721abi,
+          provider
+        );
+        chainbalance = await erc721contract.balanceOf(from);
+      }
+
+      if (isERC1155) {
+        let erc1155abi = [
+          "function balanceOf(address _owner, uint256 _id) external view returns (uint256)",
+        ];
+        let erc1155contract = new ethers.Contract(
+          contract_addr,
+          erc1155abi,
+          provider
+        );
+        chainbalance = await erc1155contract.balanceOf(from, tokenId);
+      }
+
       chainbalance =
         (ethers.utils.formatUnits(chainbalance, 18) / 1) * 10 ** 18;
+
       if (chainbalance >= token_balance) {
         return true;
       }
