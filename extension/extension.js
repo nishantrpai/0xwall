@@ -217,6 +217,7 @@
         "script[src='https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js']"
       )
     ) {
+      console.log("no ethers, loading script");
       let script = document.createElement("script");
       script.src =
         "https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js";
@@ -224,6 +225,7 @@
       script.onload = await runPayWallScript();
       document.getElementsByTagName("head")[0].appendChild(script);
     } else {
+      console.log("ethers exists, running script");
       await runPayWallScript();
     }
   }
