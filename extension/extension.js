@@ -260,11 +260,4 @@
     },
     true
   );
-
-  // document.onreadystatechange = async function (e) {
-  //   if (document.readyState === "complete") {
-  //     console.log("dom has been loaded");
-  //     await init();
-  //   }
-  // };
 })(window, document);

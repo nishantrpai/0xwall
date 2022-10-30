@@ -83,7 +83,7 @@ async function compile() {
 
   fs.writeFile(
     extensionDirectory + "/compiled/paywall.js",
-    extension,
+    extensionMinify.code,
     function (err) {
       if (err) throw err;
       console.log("Saved!");
