@@ -220,7 +220,7 @@
 
   window.addEventListener("load", (event) => {
     console.log("dom has loaded completely");
-    // init();
+    init();
   });
 
   window.addEventListener(
