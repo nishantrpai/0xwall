@@ -39,12 +39,21 @@ const getTx = async (req, res) => {
     // check if there are tiers with erc1155 token type
     const { data: erc1155txs, error: erc1155txsErr } = await supabase
       .from("paywall_reader_erc1155")
-      .select("tier_id, paywall_link_tiers!inner(*)")
+      .select("tier_id, token_id, paywall_link_tiers!inner(*)")
       .eq("reader_account", reader_account)
       .eq("paywall_link_tiers.domain", domain);
 
     for (let i = 0; i < erc1155txs.length; i++) {
-      tier_id.push(erc1155txs[i].paywall_link_tiers.id);
+      let stillowns = await verifyTransaction(
+        "verifyToken",
+        "",
+        reader_account,
+        erc1155txs[i].paywall_link_tiers,
+        erc1155txs[i].token_id
+      );
+      if (stillowns) {
+        tier_id.push(erc1155txs[i].paywall_link_tiers.id);
+      }
     }
 
     let { data: links } = await supabase
