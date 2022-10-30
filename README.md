@@ -42,7 +42,7 @@ book.com
 7. Paste this in the `<head>` tag:
 
 ```
-  <script src="https://0xwall.app/api/extension"></script>
+  <script src="https://0xwall.app/api/extension" defer></script>
 ```
 
 #### Carrd
