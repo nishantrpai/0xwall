@@ -213,7 +213,7 @@
 
   async function init() {
     if (
-      document.querySelector(
+      !document.querySelector(
         "script[src='https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js']"
       )
     ) {
