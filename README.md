@@ -42,7 +42,7 @@ book.com
 7. Paste this in the `<head>` tag:
 
 ```
-  <script src="https://0xwall.app/api/extension" defer></script>
+  <script src="https://0xwall.app/api/extension"></script>
 ```
 
 #### Carrd
@@ -88,7 +88,6 @@ PS: He did it while sipping coffee
 2. Add script to the "Site Header" text box. Code added into the "Site Header" field is injected into the <head> tag on every page of your site.
 
 3. After adding the script, click on the "Save" button.
-
 
 ### Reader
 

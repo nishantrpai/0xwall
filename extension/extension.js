@@ -216,6 +216,7 @@
     script.src =
       "https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js";
     script.type = "application/javascript";
+    script.defer = true;
     document.getElementsByTagName("head")[0].appendChild(script);
     script.onload = runPayWallScript();
   }
