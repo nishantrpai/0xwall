@@ -223,7 +223,9 @@
         "https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js";
       script.type = "application/javascript";
       script.async = true;
-      script.onload = await runPayWallScript();
+      script.addEventListener("load", async () => {
+        await runPayWallScript();
+      });
       document.getElementsByTagName("head")[0].appendChild(script);
     } else {
       console.log("ethers exists, running script");
@@ -259,10 +261,10 @@
     true
   );
 
-  document.onreadystatechange = async function (e) {
-    if (document.readyState === "complete") {
-      console.log("dom has been loaded");
-      await init();
-    }
-  };
+  // document.onreadystatechange = async function (e) {
+  //   if (document.readyState === "complete") {
+  //     console.log("dom has been loaded");
+  //     await init();
+  //   }
+  // };
 })(window, document);
