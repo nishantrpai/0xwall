@@ -211,26 +211,34 @@
     }
   }
 
-  function init() {
-    let script = document.createElement("script");
-    script.src =
-      "https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js";
-    script.type = "application/javascript";
-    script.defer = true;
-    document.getElementsByTagName("head")[0].appendChild(script);
-    script.onload = runPayWallScript();
+  async function init() {
+    if (
+      document.querySelector(
+        "script[src='https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js']"
+      )
+    ) {
+      let script = document.createElement("script");
+      script.src =
+        "https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js";
+      script.type = "application/javascript";
+      script.defer = true;
+      document.getElementsByTagName("head")[0].appendChild(script);
+      script.onload = await runPayWallScript();
+    } else {
+      await runPayWallScript();
+    }
   }
 
-  window.addEventListener("load", (event) => {
+  window.addEventListener("load", async (event) => {
     console.log("dom has loaded completely");
-    init();
+    await init();
   });
 
   window.addEventListener(
     "hashchange",
     async () => {
       console.log("on hash changed");
-      await runPayWallScript();
+      await init();
     },
     false
   );
