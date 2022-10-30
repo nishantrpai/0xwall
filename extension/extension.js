@@ -256,10 +256,10 @@
     true
   );
 
-  document.onreadystatechange = function (e) {
+  document.onreadystatechange = async function (e) {
     if (document.readyState === "complete") {
       console.log("dom has been loaded");
-      init();
+      await init();
     }
   };
 })(window, document);
