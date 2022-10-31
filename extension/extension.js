@@ -245,7 +245,6 @@
   }
 
   window.addEventListener("load", async (event) => {
-    event.preventDefault();
     console.log("dom has loaded completely");
     await init();
   });
@@ -264,7 +263,6 @@
     "click",
     () => {
       requestAnimationFrame(async (event) => {
-        event.preventDefault();
         if (windowurl !== window.location.href) {
           console.log("url changed");
           windowurl = window.location.href;
