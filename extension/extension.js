@@ -245,27 +245,30 @@
   }
 
   window.addEventListener("load", async (event) => {
+    event.preventDefault();
     console.log("dom has loaded completely");
     await init();
   });
 
-  window.addEventListener(
-    "hashchange",
-    async () => {
-      console.log("on hash changed");
-      await init();
-    },
-    false
-  );
+  // window.addEventListener(
+  //   "hashchange",
+  //   async (event) => {
+  //     event.preventDefault();
+  //     console.log("on hash changed");
+  //     await init();
+  //   },
+  //   false
+  // );
 
   window.addEventListener(
     "click",
     () => {
-      requestAnimationFrame(async () => {
+      requestAnimationFrame(async (event) => {
+        event.preventDefault();
         if (windowurl !== window.location.href) {
           console.log("url changed");
           windowurl = window.location.href;
-          await runPayWallScript();
+          await init();
         }
       });
     },
