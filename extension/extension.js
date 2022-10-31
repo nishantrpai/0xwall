@@ -8,6 +8,7 @@
 
   let readerLinks = [];
 
+  // TODO: remove
   window.readerLinks = readerLinks;
 
   let payWalledElement = {};
@@ -115,7 +116,6 @@
   function showElements(elements, tiers) {
     elements.forEach((element) => {
       if (tiers.includes(element.tier_id)) {
-        readerLinks.push(element.link);
         setInnerHTML(
           document.querySelector(element.hash),
           payWalledElement[element.hash]
@@ -192,6 +192,14 @@
     return tier_id;
   }
 
+  async function addReaderLinks(links, tiers) {
+    for (let i = 0; i < links.length; i++) {
+      if (tiers.includes(links[i].tier_id)) {
+        readerLinks.push(links[i].link);
+      }
+    }
+  }
+
   async function getReaderAccount() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const accounts = await provider.send("eth_requestAccounts", []);
@@ -208,6 +216,7 @@
       if (window.ethereum) {
         let reader_account = await getReaderAccount();
         let tiers = await getTiers(reader_account, domain);
+        addReaderLinks(links, tiers);
         showElements(elements, tiers);
       }
     }
