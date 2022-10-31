@@ -8,9 +8,6 @@
 
   let readerLinks = [];
 
-  // TODO: remove
-  window.readerLinks = readerLinks;
-
   let payWalledElement = {};
   async function fetchLinksFrmDB(domain) {
     let response = await fetch(`${API_URL}/api/link?domain=${domain}`);
@@ -228,7 +225,6 @@
         "script[src='https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js']"
       )
     ) {
-      console.log("no ethers, loading script");
       let script = document.createElement("script");
       script.src =
         "https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js";
@@ -239,7 +235,6 @@
       });
       document.getElementsByTagName("head")[0].appendChild(script);
     } else {
-      console.log("ethers exists, running script");
       await runPayWallScript();
     }
   }
@@ -248,16 +243,6 @@
     console.log("dom has loaded completely");
     await init();
   });
-
-  // window.addEventListener(
-  //   "hashchange",
-  //   async (event) => {
-  //     event.preventDefault();
-  //     console.log("on hash changed");
-  //     await init();
-  //   },
-  //   false
-  // );
 
   window.addEventListener(
     "click",
