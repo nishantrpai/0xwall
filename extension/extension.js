@@ -8,6 +8,8 @@
 
   let readerLinks = [];
 
+  window.readerLinks = readerLinks;
+
   let payWalledElement = {};
   async function fetchLinksFrmDB(domain) {
     let response = await fetch(`${API_URL}/api/link?domain=${domain}`);
