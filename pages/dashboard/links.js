@@ -12,7 +12,12 @@ import {
   FiX,
 } from "react-icons/fi";
 import Modal from "components/Modal";
-import { validateFormData, validateValue } from "util/validate";
+import {
+  domainPattern,
+  linkPattern,
+  validateFormData,
+  validateValue,
+} from "util/validate";
 import { useRouter } from "next/router";
 
 export default function Dashboard({ address, token }) {
@@ -87,7 +92,7 @@ export default function Dashboard({ address, token }) {
     }
 
     if (name == "domain") {
-      value = value.replace('www.', '');
+      value = value.replace("www.", "");
     }
 
     setTierData((prevState) => ({
@@ -151,12 +156,14 @@ export default function Dashboard({ address, token }) {
 
   const addLink = async () => {
     let { links, link } = { ...tierData };
-    links.push(link);
-    setTierData((prevState) => ({
-      ...prevState,
-      links,
-      link: "",
-    }));
+    if (linkPattern.test(link)) {
+      links.push(link);
+      setTierData((prevState) => ({
+        ...prevState,
+        links,
+        link: "",
+      }));
+    }
   };
 
   return (
@@ -182,9 +189,14 @@ export default function Dashboard({ address, token }) {
         <div className="grid mt-14">
           {accountInfo?.service_tier - linksUsed <= 3 && (
             <span className="text-sm bg-yellow-100 text-yellow-800 p-2">
-              Used {linksUsed}/{accountInfo?.service_tier} links. To
-              add more links you can {" "}
-              <a className="underline" onClick={() => { router.push('/dashboard/upgrade') }}>
+              Used {linksUsed}/{accountInfo?.service_tier} links. To add more
+              links you can{" "}
+              <a
+                className="underline"
+                onClick={() => {
+                  router.push("/dashboard/upgrade");
+                }}
+              >
                 upgrade
               </a>
               .
@@ -374,10 +386,11 @@ export default function Dashboard({ address, token }) {
               <div className="flex flex-row-reverse w-full gap-4 mt-4 rounded-b-lg p-2">
                 {
                   <button
-                    className={`p-4 py-2 text-sm ${validateFormData(tierData) && !formStateErrors
+                    className={`p-4 py-2 text-sm ${
+                      validateFormData(tierData) && !formStateErrors
                         ? "opacity-100"
                         : "opacity-50"
-                      } bg-green-100 text-green-800 rounded-md font-bold`}
+                    } bg-green-100 text-green-800 rounded-md font-bold`}
                     onClick={() => {
                       if (
                         !loading &&

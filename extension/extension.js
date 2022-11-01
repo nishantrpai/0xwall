@@ -128,12 +128,16 @@
       .replace("www.", "");
   }
 
+  function matchPattern(pattern, path) {
+    return new RegExp(pattern).test(path);
+  }
+
   function matchPath(currentLocation, link) {
     let curl = new URL(`https://${formatURL(currentLocation)}`);
     let dblink = new URL(`https://${link}`);
     curl = `${curl.hostname}${curl.pathname}`;
     dblink = `${dblink.hostname}${dblink.pathname}`;
-    return curl == dblink;
+    return curl == dblink || matchPattern(dblink, curl);
   }
 
   function matchHashorSection(currentLocation, link) {
@@ -158,10 +162,13 @@
   function checkIfPaywall(currentLocation, allLinks) {
     let elements = [];
     let paywall = false;
+    let curl = new URL(`https://${formatURL(currentLocation)}`);
+    curl = `${curl.hostname}${curl.pathname}`;
     for (let i = 0; i < allLinks.length; i++) {
       if (
         matchPath(currentLocation, allLinks[i].link) &&
-        !readerLinks.includes(allLinks[i].link)
+        !readerLinks.includes(allLinks[i].link) &&
+        !readerLinks.filter((link) => matchPattern(link, curl)).length
       ) {
         if (matchHashorSection(currentLocation, allLinks[i].link)) {
           paywall = true;
