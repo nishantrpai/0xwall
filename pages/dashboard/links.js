@@ -350,7 +350,7 @@ export default function Dashboard({ address, token }) {
 
                 {tierData.type == "tx" && (
                   <div className="flex flex-col">
-                    <label className="text-sm font-bold mt-4">Period</label>
+                    <label className="text-sm font-bold mt-4">Validity</label>
                     <div className="relative inline-flex text-sm">
                       <input
                         name="tx_period"
