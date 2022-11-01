@@ -167,8 +167,10 @@
     for (let i = 0; i < allLinks.length; i++) {
       if (
         matchPath(currentLocation, allLinks[i].link) &&
-        !readerLinks.includes(allLinks[i].link) &&
-        !readerLinks.filter((link) => matchPattern(link, curl)).length
+        !(
+          readerLinks.includes(allLinks[i].link) ||
+          readerLinks.filter((link) => matchPattern(link, curl)).length
+        )
       ) {
         if (matchHashorSection(currentLocation, allLinks[i].link)) {
           paywall = true;
