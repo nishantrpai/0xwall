@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { verifyTransaction } from "util/index";
+import { dateDiff, getTxDate, verifyTransaction } from "util/index";
 const { SUPABASE_URL, SUPABASE_KEY } = process.env;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -16,7 +16,17 @@ const getTx = async (req, res) => {
       .eq("paywall_link_tiers.domain", domain);
 
     for (let i = 0; i < txs.length; i++) {
-      tier_id.push(txs[i].paywall_link_tiers.id);
+      if (!txs[i].paywall_link_tiers.tx_period) {
+        tier_id.push(txs[i].paywall_link_tiers.id);
+      } else {
+        let txDate = await getTxDate(txs[i].tx);
+        if (
+          dateDiff(txDate, Date.now()) <=
+          parseInt(txs[i].paywall_link_tiers.tx_period)
+        ) {
+          tier_id.push(txs[i].paywall_link_tiers.id);
+        }
+      }
     }
 
     //check if there are tiers with token type

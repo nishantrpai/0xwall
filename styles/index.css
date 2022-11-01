@@ -19,3 +19,7 @@ body {
   margin: auto;
   padding: 10px 5px;
 }
+
+input::-webkit-calendar-picker-indicator {
+  display: none !important;
+}

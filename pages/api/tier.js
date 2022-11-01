@@ -8,7 +8,7 @@ const createAccount = async (writer_account) => {
   await supabase
     .from("paywall_service_tier")
     .insert([{ writer_account, service_tier: 10 }]);
-}
+};
 
 // 1 domain can be associated with only 1 wallet
 const allowDomainToWallet = (writer_account, domains) => {
@@ -19,7 +19,7 @@ const allowDomainToWallet = (writer_account, domains) => {
     }
   });
   return allowed;
-}
+};
 
 const addTier = async (req, res) => {
   const token = req?.headers?.authorization;
@@ -28,7 +28,7 @@ const addTier = async (req, res) => {
   const { tier, tiers } = JSON.parse(req.body);
 
   if (!validateFormData(tier)) {
-    res.status(400).json({ success: false, error: 'invalid data' });
+    res.status(400).json({ success: false, error: "invalid data" });
   }
 
   let totalLinks = 0;
@@ -46,6 +46,7 @@ const addTier = async (req, res) => {
     contract_addr,
     token_balance,
     links,
+    tx_period = "",
   } = tier;
 
   // check if domain has same wallet or none
@@ -55,10 +56,13 @@ const addTier = async (req, res) => {
     .eq("domain", domain);
 
   if (!allowDomainToWallet(writer_account, domains)) {
-    res.status(400).json({ success: false, error: 'This domain has already been added from a different wallet' });
-  }
-
-  else {
+    res
+      .status(400)
+      .json({
+        success: false,
+        error: "This domain has already been added from a different wallet",
+      });
+  } else {
     const { data: accountInfo } = await supabase
       .from("paywall_service_tier")
       .select("*")
@@ -83,6 +87,7 @@ const addTier = async (req, res) => {
             price,
             contract_addr,
             token_balance,
+            tx_period,
           },
         ]);
 
@@ -144,7 +149,7 @@ const editTier = async (req, res) => {
   let { tier, tiers } = JSON.parse(req.body);
 
   if (!validateFormData(tier)) {
-    res.status(400).json({ success: false, error: 'invalid data' });
+    res.status(400).json({ success: false, error: "invalid data" });
   }
 
   let {
@@ -156,6 +161,7 @@ const editTier = async (req, res) => {
     token_balance,
     id,
     links,
+    tx_period = "",
   } = tier;
   let tier_links = [];
 
@@ -166,10 +172,13 @@ const editTier = async (req, res) => {
     .eq("domain", domain);
 
   if (!allowDomainToWallet(writer_account, domains)) {
-    res.status(400).json({ success: false, error: 'This domain has already been added from a different wallet' });
-  }
-
-  else {
+    res
+      .status(400)
+      .json({
+        success: false,
+        error: "This domain has already been added from a different wallet",
+      });
+  } else {
     let totalLinks = 0;
     Object.keys(tiers).map((tier) => {
       totalLinks += tiers[tier].links.length;
@@ -198,7 +207,15 @@ const editTier = async (req, res) => {
     } else {
       const { error: linkTierError } = await supabase
         .from("paywall_link_tiers")
-        .update({ name, domain, type, price, contract_addr, token_balance })
+        .update({
+          name,
+          domain,
+          type,
+          price,
+          contract_addr,
+          token_balance,
+          tx_period,
+        })
         .match({ id });
 
       const { error: linkError } = await supabase
@@ -258,6 +275,7 @@ export default async function handler(req, res) {
     switch (req.method) {
       case "POST":
         // new link
+        console.log("add tier");
         addTier(req, res);
         break;
 
@@ -268,6 +286,7 @@ export default async function handler(req, res) {
 
       case "PUT":
         // edit links
+        console.log("edit tier");
         editTier(req, res);
         break;
 

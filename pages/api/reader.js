@@ -1,17 +1,8 @@
 import { fetchAccount } from "util/auth";
 import { createClient } from "@supabase/supabase-js";
-import { verifyTransaction } from "util/index";
+import { verifyTransaction, dateDiff } from "util/index";
 const { SUPABASE_URL, SUPABASE_KEY } = process.env;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-const _MS_PER_DAY = 1000 * 60 * 60 * 24;
-
-const dateDiff = (timestamp1, timestamp2) => {
-  let a = new Date(timestamp1);
-  let b = new Date(timestamp2);
-  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-  return Math.floor((utc2 - utc1) / _MS_PER_DAY);
-};
 
 const addTxReader = async (req, res) => {
   let { reader_account, tx, link, value } = JSON.parse(req.body);
@@ -34,14 +25,36 @@ const addTxReader = async (req, res) => {
     paywall_link_tiers
   );
   if (transacted) {
-    const { error: dberror } = await supabase
+    let { data: readerTxs } = await supabase
       .from("paywall_reader_tx")
-      .insert([{ reader_account, tx, tier_id, value }]);
+      .select("tier_id, reader_account")
+      .eq("reader_account", reader_account)
+      .eq("tier_id", tier_id);
 
-    if (!dberror) {
-      res.status(200).json({ success: true });
+    if (readerTxs.length == 0) {
+      // add new tx
+      const { error } = await supabase
+        .from("paywall_reader_tx")
+        .insert([{ reader_account, tx, tier_id, value }]);
+
+      if (!error) {
+        res.status(200).json({ success: true });
+      } else {
+        res.status(200).json({ success: false });
+      }
     } else {
-      res.status(200).json({ success: false });
+      // update existing tx
+      const { error } = await supabase
+        .from("paywall_reader_tx")
+        .update({ tx, value })
+        .eq("reader_account", reader_account)
+        .eq("tier_id", tier_id);
+
+      if (!error) {
+        res.status(200).json({ success: true });
+      } else {
+        res.status(200).json({ success: false });
+      }
     }
   }
 };
@@ -75,10 +88,10 @@ const addERC1155Reader = async (req, res) => {
       .eq("tier_id", tier_id);
 
     if (readerERC1155s.length == 0) {
-      const { error: dberror } = await supabase
+      const { error } = await supabase
         .from("paywall_reader_erc1155")
         .insert([{ reader_account, token_id: tokenId, tier_id }]);
-      if (!dberror) {
+      if (!error) {
         res.status(200).json({ success: true });
       } else {
         res.status(400).json({ success: false });

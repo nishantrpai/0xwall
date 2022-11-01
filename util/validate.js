@@ -23,7 +23,7 @@ export const domainPattern = new RegExp(
   /^(?:(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-\.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))(?:\:[0-9]{1,5})?$/i
 );
 
-export const tokenBalancePattern = new RegExp(/\d+/i);
+export const numberPattern = new RegExp(/\d+/i);
 
 export const validateValue = (name, value) => {
   let isValidValue = true;
@@ -41,7 +41,10 @@ export const validateValue = (name, value) => {
       isValidValue = addressPattern.test(value);
       break;
     case "token_balance":
-      isValidValue = tokenBalancePattern.test(value);
+      isValidValue = numberPattern.test(value);
+      break;
+    case "tx_period":
+      isValidValue = numberPattern.test(value) || !value.length;
       break;
     default:
       isValidValue = true;
@@ -57,7 +60,8 @@ export const validateFormData = (tierData) => {
     !tierData.links.length ||
     (tierData.type == "tx" && !tierData.price) ||
     (tierData.type == "token" && !tierData.contract_addr) ||
-    (tierData.type == "token" && !tierData.token_balance)
+    (tierData.type == "token" && !tierData.token_balance) ||
+    !(numberPattern.test(tierData.tx_period) || !tierData.tx_period?.length)
   ) {
     return false;
   }

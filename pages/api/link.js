@@ -19,6 +19,7 @@ const getLink = async (req, res) => {
       contract_addr: link.paywall_link_tiers.contract_addr,
       token_balance: link.paywall_link_tiers.token_balance,
       writer_account: link.paywall_link_tiers.writer_account,
+      tx_period: link.paywall_link_tiers.tx_period,
     };
   });
 

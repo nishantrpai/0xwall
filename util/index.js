@@ -1,4 +1,23 @@
 const { ethers } = require("ethers");
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+export const dateDiff = (timestamp1, timestamp2) => {
+  let a = new Date(timestamp1);
+  let b = new Date(timestamp2);
+  const utc1 = Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate());
+  const utc2 = Date.UTC(b.getUTCFullYear(), b.getUTCMonth(), b.getUTCDate());
+  return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+};
+
+export const getTxDate = async (hash) => {
+  const provider = new ethers.providers.EtherscanProvider(
+    process.env.CHAIN,
+    process.env.ETHERSCAN_KEY
+  );
+  let tx = await provider.getTransaction(hash);
+  let block = await provider.getBlock(tx.blockNumber);
+  return block.timestamp * 1000;
+};
 
 export const verifyTx = async (hash, from, to, price, data) => {
   // TODO: what happens if this API goes down

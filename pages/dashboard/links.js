@@ -22,6 +22,7 @@ import { useRouter } from "next/router";
 
 export default function Dashboard({ address, token }) {
   const router = useRouter();
+  const [customtx, setCustomTx] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const writerAccount = address?.toLowerCase();
@@ -54,6 +55,7 @@ export default function Dashboard({ address, token }) {
       price: "",
       contract_addr: "",
       token_balance: 1,
+      tx_period: "",
       link: "",
       links: [],
     };
@@ -69,6 +71,7 @@ export default function Dashboard({ address, token }) {
     contract_addr: "",
     link: "",
     token_balance: 1,
+    tx_period: "",
     links: [],
   });
 
@@ -347,6 +350,28 @@ export default function Dashboard({ address, token }) {
 
                 {tierData.type == "tx" && (
                   <div className="flex flex-col">
+                    <label className="text-sm font-bold mt-4">Period</label>
+                    <div className="relative inline-flex text-sm">
+                      <input
+                        name="tx_period"
+                        list="validity"
+                        autoComplete="off"
+                        className="p-1 px-2 bg-gray-100 mt-2 w-full border rounded-md text-sm focus:bg-white"
+                        placeholder="Enter the validity period (days). Leave empty for lifetime validity."
+                        onChange={handleTierUpdate}
+                        defaultValue={tierData.tx_period}
+                      />
+                      <datalist
+                        id="validity"
+                        onChange={handleTierUpdate}
+                        defaultValue={tierData.tx_period}
+                        name="tx_period"
+                      >
+                        <option value={30}>Month</option>
+                        <option value={365}>Year</option>
+                      </datalist>
+                    </div>
+
                     <label className="text-sm font-bold mt-4">Price (Ξ)</label>
                     <input
                       name="price"

@@ -39,7 +39,8 @@
     token_balance,
     writer_account,
     domain,
-    link
+    link,
+    tx_period = ""
   ) {
     let paywallhtml =
       elementHash == "body" ? paywallElemPage : paywallElemSection;
@@ -47,7 +48,9 @@
     let btnStyle;
     let tokenCtr = "erc721-ctr";
     if (type == "tx") {
-      requirement = `Unlock requires a transaction of ${price}Ξ to <a href="https://etherscan.io/address/${writer_account}" target="_blank">${humanizeWallet(
+      requirement = `Unlock requires a transaction of ${price}Ξ ${
+        tx_period ? `(valid only for ${tx_period} days)` : ""
+      } to <a href="https://etherscan.io/address/${writer_account}" target="_blank">${humanizeWallet(
         writer_account
       )}</a>`;
       btnStyle = "btn-checkout-tx";
@@ -103,7 +106,8 @@
         element.token_balance,
         element.writer_account,
         domain,
-        element.link
+        element.link,
+        element.tx_period
       );
 
       setInnerHTML(document.querySelector(element.hash), paywalledElement);
@@ -183,6 +187,7 @@
             contract_addr: allLinks[i].contract_addr,
             token_balance: allLinks[i].token_balance,
             writer_account: allLinks[i].writer_account,
+            tx_period: allLinks[i].tx_period,
           });
         }
       }
