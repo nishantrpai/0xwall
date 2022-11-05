@@ -47,8 +47,7 @@ const addTxReader = async (req, res) => {
       const { error } = await supabase
         .from("paywall_reader_tx")
         .update({ tx, value })
-        .eq("reader_account", reader_account)
-        .eq("tier_id", tier_id);
+        .match({ reader_account, tier_id });
 
       if (!error) {
         res.status(200).json({ success: true });
