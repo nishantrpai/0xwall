@@ -3,14 +3,21 @@ if (!window.ethereum) {
     document.getElementById("install-mm").innerHTML =
       "Install <a href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en' target='_blank'> Metamask </a>";
   } else {
-    let domainRe = new RegExp("http(s)?://");
-    let domain = window.location.href.replace(domainRe, "");
-    domain = domain.replace("www.", "");
     document.getElementById("install-mm").innerHTML =
-      "Open in <a href='https://metamask.app.link/dapp/" +
-      domain +
-      "' target='_blank'> Metamask Browser </a>";
+      'Open in <button class="redirect-metamask" onclick="openMetamaskUrl()"> Metamask Browser </a>';
   }
+}
+
+function openMetamaskUrl() {
+  let domainRe = new RegExp("http(s)?://");
+  let domain = window.location.href.replace(domainRe, "");
+  domain = domain.replace("www.", "");
+  const a = document.createElement("a");
+  a.href = "https://metamask.app.link/dapp/" + domain;
+  a.target = "_self";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 
 async function unlockPayWall() {
