@@ -1,6 +1,7 @@
 import Head from "next/head";
 import HomeLayout from "layouts/home";
 import { FiCheck } from "react-icons/fi";
+import { FaDiscord, FaTwitter } from "react-icons/fa";
 
 export default function Home() {
   return (
@@ -60,16 +61,46 @@ export default function Home() {
           </div>
           <div className="mt-8">
             <h3 className="font-bold text-gray-800">How it works</h3>
-            <p className="text-gray-500 mt-2 flex items-center gap-2 text-sm">1. Add link in dashboard</p>
-            <p className="flex flex-col text-gray-500 mt-2 flex gap-2 text-sm">2. Add script on your website in the {`<head>`} tag
+            <p className="text-gray-500 mt-2 flex items-center gap-2 text-sm">
+              1. Add link in dashboard
+            </p>
+            <p className="flex flex-col text-gray-500 mt-2 flex gap-2 text-sm">
+              2. Add script on your website in the {`<head>`} tag
               <span className="flex flex-col text-gray-500 mt-2 mb-2 flex gap-2 bg-gray-100 text-xs max-w-max px-2 py-2 rounded-md">
                 {`<script src="https://0xwall.app/api/extension" defer></script>`}
               </span>
             </p>
-            <p className="flex flex-col text-gray-500 mt-2 flex gap-2 text-sm">3. That's it, you should see a paywall on that link.</p>
+            <p className="flex flex-col text-gray-500 mt-2 flex gap-2 text-sm">
+              3. That's it, you should see a paywall on that link.
+            </p>
 
-            <p className="text-gray-500 mt-4 flex gap-2 text-xs">Stack specific instructions in<a className="text-blue-500" target="_blank" href="https://github.com/nishantrpai/0xwall#how-to-use">README.md</a></p>
-
+            <p className="text-gray-500 mt-4 flex gap-2 text-xs">
+              Stack specific instructions in
+              <a
+                className="text-blue-500"
+                target="_blank"
+                href="https://github.com/nishantrpai/0xwall#how-to-use"
+              >
+                README.md
+              </a>
+            </p>
+          </div>
+          <div className="mt-8 flex">
+            {/* discord svg */}
+            <a
+              href="https://discord.com/invite/5df8q45ajg"
+              target="_blank"
+              className="text-gray-400 hover:text-indigo-500"
+            >
+              <FaDiscord />
+            </a>
+            <a
+              href="https://twitter.com/_0xwall"
+              target="_blank"
+              className="text-gray-400 hover:text-blue-500 ml-2"
+            >
+              <FaTwitter />
+            </a>
           </div>
         </div>
       </main>
