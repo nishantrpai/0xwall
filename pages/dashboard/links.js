@@ -330,7 +330,7 @@ export default function Dashboard({ address, token }) {
                 <input
                   name="domain"
                   className="p-1 px-2 bg-gray-100 mt-2 w-full border rounded-md text-sm focus:bg-white"
-                  placeholder="Enter the domain"
+                  placeholder="Enter the domain you want to paywall for e.g., test.com"
                   onChange={handleTierUpdate}
                   defaultValue={tierData.domain}
                 />
