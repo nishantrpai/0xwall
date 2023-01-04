@@ -20,6 +20,7 @@ const getLink = async (req, res) => {
       token_balance: link.paywall_link_tiers.token_balance,
       writer_account: link.paywall_link_tiers.writer_account,
       tx_period: link.paywall_link_tiers.tx_period,
+      mint_link: link.paywall_link_tiers.mint_link,
     };
   });
 

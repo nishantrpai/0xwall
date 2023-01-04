@@ -132,6 +132,23 @@ export const humanizeWallet = (account) => {
   return `${account.substr(0, 5)}...${account.substr(-3)}`;
 };
 
+export const parseLink = (link) => {
+  // remove https:// and http:// and www. from link
+  if (!link) return "";
+  if (!link.match(/^(http|https):\/\/[^ "]+$/)) return link;
+  let parsedLink = link.replace(/(^\w+:|^)\/\//, "");
+  parsedLink = parsedLink.replace("www.", "");
+  return parsedLink;
+};
+
+export const parseDomain = (link) => {
+  // if link is valid url
+  let parsedLink = link.replace(/(^\w+:|^)\/\//, "");
+  parsedLink = parsedLink.replace("www.", "");
+  parsedLink = parsedLink.split("/")[0];
+  return parsedLink;
+};
+
 export const connectWallet = (cb) => {
   console.log("click connect wallet");
   const provider = new ethers.providers.Web3Provider(window.ethereum);

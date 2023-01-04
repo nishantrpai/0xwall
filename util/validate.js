@@ -17,6 +17,21 @@ export const linkPattern = new RegExp(
   "i"
 );
 
+// write a regexp to validate url
+export const urlPattern = new RegExp(
+  "^" +
+    "(?:(?:https?|ftp):)?" +
+    "(?:\\/?\\/)" +
+    "(?:\\/?\\/)" +
+    "(?:[\\-;:&=\\+\\$,\\w]+@)?" +
+    "(?:[a-zA-Z0-9\\-\\.]+)" +
+    "(?::\\d+)?" +
+    "(?:[\\/\\?]" +
+    "(?:[\\-\\+=&;%@.\\w]+)" +
+    ")?",
+  "i"
+);
+
 export const addressPattern = new RegExp(/^0x[a-fA-F0-9]{40}$/i);
 
 export const domainPattern = new RegExp(
@@ -29,10 +44,13 @@ export const validateValue = (name, value) => {
   let isValidValue = true;
   switch (name) {
     case "domain":
-      isValidValue = domainPattern.test(value);
+      isValidValue = domainPattern.test(value) || urlPattern.test(value);
       break;
     case "link":
-      isValidValue = linkPattern.test(value);
+      isValidValue = linkPattern.test(value) || urlPattern.test(value);
+      break;
+    case "mint_link":
+      isValidValue = linkPattern.test(value) || urlPattern.test(value);
       break;
     case "name":
       isValidValue = value.length > 0;
@@ -60,7 +78,12 @@ export const validateFormData = (tierData) => {
     !tierData.links.length ||
     (tierData.type == "tx" && !tierData.price) ||
     (tierData.type == "token" && !tierData.contract_addr) ||
-    (tierData.type == "token" && !tierData.token_balance) ||
+    (tierData.type == "token" &&
+      !tierData.token_balance &&
+      tierData.token_balance > 0) ||
+    (tierData.type == "mint_link" &&
+      !tierData.token_balance &&
+      tierData.token_balance > 0) ||
     !(numberPattern.test(tierData.tx_period) || !tierData.tx_period?.length)
   ) {
     return false;

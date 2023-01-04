@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import useSWR from "swr";
-import { fetcher } from "util/index";
+import { fetcher, parseDomain, parseLink } from "util/index";
 import Image from "next/image";
 import DashboardLayout from "layouts/dashboard";
 import {
@@ -15,6 +15,7 @@ import Modal from "components/Modal";
 import {
   domainPattern,
   linkPattern,
+  urlPattern,
   validateFormData,
   validateValue,
 } from "util/validate";
@@ -72,6 +73,7 @@ export default function Dashboard({ address, token }) {
     link: "",
     token_balance: 1,
     tx_period: "",
+    mint_link: "",
     links: [],
   });
 
@@ -95,7 +97,11 @@ export default function Dashboard({ address, token }) {
     }
 
     if (name == "domain") {
-      value = value.replace("www.", "");
+      value = parseDomain(value);
+    }
+
+    if (name == "mint_link") {
+      value = parseLink(value);
     }
 
     setTierData((prevState) => ({
@@ -159,11 +165,12 @@ export default function Dashboard({ address, token }) {
 
   const addLink = async () => {
     let { links, link } = { ...tierData };
-    if (linkPattern.test(link)) {
-      links.push(link);
+    if (linkPattern.test(link) || urlPattern.test(link)) {
+      links.push(parseLink(link));
       setTierData((prevState) => ({
         ...prevState,
         links,
+        domain: parseDomain(link),
         link: "",
       }));
     }
@@ -332,7 +339,7 @@ export default function Dashboard({ address, token }) {
                   className="p-1 px-2 bg-gray-100 mt-2 w-full border rounded-md text-sm focus:bg-white"
                   placeholder="Enter the domain you want to paywall for e.g., test.com"
                   onChange={handleTierUpdate}
-                  defaultValue={tierData.domain}
+                  value={tierData.domain}
                 />
                 <label className="text-sm font-bold mt-4">Type</label>
                 <div className="relative inline-flex text-sm">
@@ -404,6 +411,16 @@ export default function Dashboard({ address, token }) {
                       placeholder="Enter the minimum balance to access this link"
                       onChange={handleTierUpdate}
                       defaultValue={tierData.token_balance}
+                    />
+                    <label className="text-sm font-bold mt-4">
+                      Collection Link
+                    </label>
+                    <input
+                      name="mint_link"
+                      className="p-1 px-2 bg-gray-100 mt-2 w-full border rounded-md text-sm focus:bg-white"
+                      placeholder="Enter the link to the collection/token for e.g., https://opensea.io/collection/netvvork"
+                      onChange={handleTierUpdate}
+                      defaultValue={tierData.mint_link}
                     />
                   </div>
                 )}

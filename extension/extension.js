@@ -40,7 +40,8 @@
     writer_account,
     domain,
     link,
-    tx_period = ""
+    tx_period = "",
+    mint_link = ""
   ) {
     let paywallhtml =
       elementHash == "body" ? paywallElemPage : paywallElemSection;
@@ -55,9 +56,11 @@
       )}</a>`;
       btnStyle = "btn-checkout-tx";
     } else {
+      let mintLink =
+        `https://${mint_link}` ?? `https://etherscan.io/token/${contract_addr}`;
       requirement = `&nbsp;Unlocking this page requires ${token_balance} ${
         parseInt(token_balance) > 1 ? "tokens" : "token"
-      } of <a href="https://etherscan.io/token/${contract_addr}" target="_blank">${humanizeWallet(
+      } of <a href=${mintLink} target="_blank">${humanizeWallet(
         contract_addr
       )}</a></span>`;
 
@@ -107,7 +110,8 @@
         element.writer_account,
         domain,
         element.link,
-        element.tx_period
+        element.tx_period,
+        element.mint_link
       );
 
       setInnerHTML(document.querySelector(element.hash), paywalledElement);
@@ -188,6 +192,7 @@
             token_balance: allLinks[i].token_balance,
             writer_account: allLinks[i].writer_account,
             tx_period: allLinks[i].tx_period,
+            mint_link: allLinks[i].mint_link,
           });
         }
       }
