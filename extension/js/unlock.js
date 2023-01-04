@@ -35,8 +35,6 @@ async function unlockPayWall() {
     document.getElementById("install-mm").innerText = "Don't refresh the page";
     document.getElementById("lock-svg").innerHTML =
       '<svg stroke="#eee" fill="none" stroke-width="1" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="5em" width="5em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>';
-    document.getElementById("status-svg").innerHTML =
-      '<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle></svg>';
     const receipt = await tx.wait();
     if (receipt) {
       let addTxResp = await fetch(":api_url:/api/reader", {
@@ -53,13 +51,9 @@ async function unlockPayWall() {
         document.getElementById("checkout-price").remove();
         document.getElementById("lock-svg").innerHTML =
           '<svg stroke="#eee" fill="none" stroke-width="1" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="5em" width="5em" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>';
-        document.getElementById("status-svg").innerHTML =
-          '<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="20 6 9 17 4 12"></polyline></svg>';
         window.location.reload();
       } else {
         document.getElementById("checkout-price").remove();
-        document.getElementById("status-svg").innerHTML =
-          '<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
         window.location.reload();
       }
     }
