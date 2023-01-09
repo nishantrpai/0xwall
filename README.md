@@ -71,7 +71,7 @@ That should be it.
 
 **Video:**
 
-[MT Jack](https://twitter.com/mtjack9) made a [walk-through](https://twitter.com/mtjack9/status/1579536799814537217) you can follow that.
+[MT Jack](https://twitter.com/mtjack9) made a [walk-through](https://www.loom.com/share/35a68c09d8784ba69ce577721bd5d515) you can follow that.
 
 PS: He did it while sipping coffee
 
