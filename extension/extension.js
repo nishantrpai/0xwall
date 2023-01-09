@@ -22,7 +22,10 @@
       Array.from(oldScript.attributes).forEach((attr) =>
         newScript.setAttribute(attr.name, attr.value)
       );
-      newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+      let scriptFragment = document
+        .createRange()
+        .createContextualFragment(oldScript.innerHTML);
+      newScript.appendChild(scriptFragment);
       oldScript.parentNode.replaceChild(newScript, oldScript);
     });
   }
