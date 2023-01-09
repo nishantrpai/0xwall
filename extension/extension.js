@@ -253,11 +253,11 @@
       script.type = "application/javascript";
       script.async = true;
       script.addEventListener("load", async () => {
-        await runPayWallScript();
+        runPayWallScript();
       });
       document.getElementsByTagName("head")[0].appendChild(script);
     } else {
-      await runPayWallScript();
+      runPayWallScript();
     }
   }
 
@@ -273,7 +273,7 @@
         if (windowurl !== window.location.href) {
           console.log("url changed");
           windowurl = window.location.href;
-          await init();
+          init();
         }
       });
     },
