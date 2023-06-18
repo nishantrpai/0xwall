@@ -8,36 +8,13 @@
         viewBox="0 0 24 24"
         stroke-linecap="round"
         stroke-linejoin="round"
-        height="5em"
-        width="5em"
+        height="2em"
+        width="2em"
         xmlns="http://www.w3.org/2000/svg"
       >
         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
       </svg>
-    </div>
-
-    <div class="unlock-requirement">
-      <span>:requirement:</span>
-    </div>
-    <button id="checkout-btn" class=":btn-style:" onclick="unlockPayWall()">
-      <span id="checkout-price"> :price: </span>
-    </button>
-    <div class=":token-ctr:">
-      <input
-        id="token-id"
-        data-contract=":contract_addr:"
-        data-balance=":token_balance:"
-        class="isERC1155-input"
-        placeholder="Enter token id"
-      />
-      <button id="erc1155-checkout-btn" onclick="verifyTokenId()">
-        Verify
-      </button>
-    </div>
-    <div id="install-mm"></div>
-    <div class="app-link">
-      <a href="https://0xwall.app">⚡ 0xwall.app</a>
     </div>
     <div
       style="
@@ -61,6 +38,29 @@
       >
       </iframe>
     </div>
+    <div class="unlock-requirement">
+      <span>:requirement:</span>
+    </div>
+    <button id="checkout-btn" class=":btn-style:" onclick="unlockPayWall()">
+      <span id="checkout-price"> :price: </span>
+    </button>
+    <div class=":token-ctr:">
+      <input
+        id="token-id"
+        data-contract=":contract_addr:"
+        data-balance=":token_balance:"
+        class="isERC1155-input"
+        placeholder="Enter token id"
+      />
+      <button id="erc1155-checkout-btn" onclick="verifyTokenId()">
+        Verify
+      </button>
+    </div>
+    <div id="install-mm"></div>
+    <div class="app-link">
+      <a href="https://0xwall.app">⚡ 0xwall.app</a>
+    </div>
+
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.min.js"
       integrity="sha512-dnvR4Aebv5bAtJxDunq3eE8puKAJrY9GBJYl9GC6lTOEC76s1dbDfJFcL9GyzpaDW4vlI/UjR8sKbc1j6Ynx6w=="
@@ -79,9 +79,12 @@
         })
         .then(function (html) {
           // check if the text contains "Not found"
-          !html.includes("Not found")
-            ? (document.querySelector("#zora-parent").style.height = "500px")
-            : null;
+          if (!html.includes("Not found")) {
+            // if it does, hide the paywall
+            document.querySelector("#zora-parent").style.height = "0px";
+            document.querySelector(".unlock-requirement").style.display =
+              "none";
+          }
         })
         .catch(function (err) {
           document.querySelector("#zora-parent").style.height = "0px";
