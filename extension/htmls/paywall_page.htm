@@ -39,5 +39,52 @@
     <div class="app-link">
       <a href="https://0xwall.app">⚡ 0xwall.app</a>
     </div>
+    <div
+      style="
+        border-radius: 4px;
+        overflow: hidden;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        height: 0px;
+        margin-top: 20px;
+      "
+      id="zora-parent"
+    >
+      <iframe
+        id="zora-embed"
+        width="100%"
+        style="min-width: 100%; min-height: 100%"
+        frameborder="0"
+        src="https://zora.co/editions/eth::contract_addr:/frame?padding=0px&mediaPadding=px&showDetails=true&theme=light&showMedia=true&showCollectors=true&showMintingUI=true"
+      >
+      </iframe>
+    </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.2/iframeResizer.min.js"
+      integrity="sha512-dnvR4Aebv5bAtJxDunq3eE8puKAJrY9GBJYl9GC6lTOEC76s1dbDfJFcL9GyzpaDW4vlI/UjR8sKbc1j6Ynx6w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
   </div>
+  <script>
+    document.querySelector("#zora-embed").onload = function () {
+      // make a request to zora frame to check text
+      fetch("https://zora.co/editions/eth::contract_addr:/frame", {
+        mode: "no-cors",
+      })
+        .then(function (response) {
+          return response.text();
+        })
+        .then(function (html) {
+          // check if the text contains "Not found"
+          !html.includes("Not found")
+            ? (document.querySelector("#zora-parent").style.height = "500px")
+            : null;
+        })
+        .catch(function (err) {
+          document.querySelector("#zora-parent").style.height = "0px";
+        });
+    };
+  </script>
 </div>
