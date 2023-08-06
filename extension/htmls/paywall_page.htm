@@ -78,8 +78,8 @@
           return response.text();
         })
         .then(function (html) {
-          // check if the text contains "Not found"
-          if (!html.includes("Not found")) {
+          // check if the text contains "Server Error"
+          if (!html.includes("Server Error")) {
             // if it does, hide the paywall
             document.querySelector("#zora-parent").style.height = "500px";
             document.querySelector(".unlock-requirement").style.display =
