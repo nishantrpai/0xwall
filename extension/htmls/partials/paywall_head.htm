@@ -16,12 +16,9 @@
       />
     </noscript>
     <style>
-      body {
-        height: 100vh;
-      }
-
       #paywall-notify {
         display: flex;
+        height: 100vh;
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -142,11 +139,8 @@
         color: #60a5fa;
       }
       @media (prefers-color-scheme: dark) {
-        body {
-          background-color: #111;
-        }
         #paywall-notify {
-          background-color: #111;
+          background-color: #000;
         }
         #checkout-ctr {
           background-color: #222;
@@ -154,11 +148,12 @@
         }
         #checkout-btn,
         #erc1155-checkout-btn {
-          background-color: #333;
+          background-color: #111;
           color: #fff;
         }
         .unlock-requirement {
           color: #999;
+          background-color: transparent;
         }
         .app-link {
           color: #777;
