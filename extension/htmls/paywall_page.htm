@@ -88,7 +88,7 @@
         .then(function (html) {
           // check if the text contains "Not found"
           if (
-            notFoundText.some((text) =>
+            !notFoundText.some((text) =>
               html.toLowerCase().includes(text.toLowerCase())
             )
           ) {
