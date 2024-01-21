@@ -87,7 +87,11 @@
         })
         .then(function (html) {
           // check if the text contains "Not found"
-          if (notFoundText.some((text) => html.includes(text))) {
+          if (
+            notFoundText.some((text) =>
+              html.toLowerCase().includes(text.toLowerCase())
+            )
+          ) {
             // if it does, hide the paywall
             document.querySelector("#zora-parent").style.height = "500px";
             document.querySelector(".unlock-requirement").style.display =
