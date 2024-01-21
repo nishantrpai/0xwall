@@ -71,6 +71,14 @@
   <script>
     document.querySelector("#zora-embed").onload = function () {
       // make a request to zora frame to check text
+      let notFoundText = [
+        "Not found",
+        "Not Found",
+        "not found",
+        "not Found",
+        "server error",
+        "CONTACT SUPPORT",
+      ];
       fetch("https://zora.co/editions/eth::contract_addr:/frame", {
         mode: "no-cors",
       })
@@ -79,7 +87,7 @@
         })
         .then(function (html) {
           // check if the text contains "Not found"
-          if (!html.includes("Not found")) {
+          if (notFoundText.some((text) => html.includes(text))) {
             // if it does, hide the paywall
             document.querySelector("#zora-parent").style.height = "500px";
             document.querySelector(".unlock-requirement").style.display =

@@ -11,26 +11,21 @@
       </h3>
       <meta
         http-equiv="refresh"
-        content="0;url"
-        ="https://support.google.com/adsense/answer/12654?hl=en"
+        content="0;url=https://support.google.com/adsense/answer/12654?hl=en"
       />
     </noscript>
     <style>
       body {
         height: 100vh;
-      }
-
-      #paywall-notify {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        font-family: sans-serif;
         background-color: #eee;
-        border-radius: 20px;
+        color: #000;
       }
 
+      .btn-checkout-token {
+        display: none !important;
+      }
+
+      #paywall-notify,
       #checkout-ctr {
         display: flex;
         flex-direction: column;
@@ -38,13 +33,13 @@
         align-items: center;
         margin: auto;
         padding: 20px;
-        margin: auto;
         border-radius: 5px;
         background-color: #fff;
         box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%),
           0 4px 6px -4px rgb(0 0 0 / 10%);
         width: 100%;
         max-width: 400px;
+        color: #000;
       }
 
       #checkout-btn,
@@ -58,92 +53,56 @@
         border: none;
         border-radius: 5px;
         width: 100%;
-        width: auto;
         font-weight: bold;
         padding: 10px 15px;
         font-size: 14px;
         background: #dbeafe;
         color: #000;
-        margin: auto;
         margin-top: 12px;
       }
 
-      .btn-checkout-tx {
-        display: flex !important;
-      }
-
-      .btn-checkout-token {
-        display: none !important;
-      }
-
-      .unlock-requirement {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        max-width: 250px;
-        gap: 4px;
-        font-size: 12px;
-        margin: 12px 0px;
-        margin-bottom: 0px;
-        color: #999;
-        overflow-wrap: break-word;
-        text-align: center;
-      }
-
-      .app-link {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        font-size: 12px;
+      .unlock-requirement,
+      .app-link,
+      #install-mm,
+      a {
+        font-size: 10px;
         color: #777;
         margin-top: 10px;
-        gap: 2px;
       }
 
-      #install-mm {
-        font-size: 10px;
-        color: #333;
-        margin-top: 10px;
-      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #000; /* Dark background */
+          color: #ccc; /* Light text */
+        }
 
-      a {
-        color: #60a5fa;
-      }
+        #paywall-notify,
+        #checkout-ctr {
+          background-color: #222; /* Darker elements */
+          color: #eee; /* Lighter text */
+        }
 
-      .erc721-ctr {
-        display: none;
-      }
+        #checkout-btn,
+        #erc1155-checkout-btn {
+          background: #4b5563; /* Darker button */
+          color: #ccc; /* Light button text */
+        }
 
-      .erc1155-ctr {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-      }
+        a,
+        .app-link,
+        #install-mm {
+          color: #93c5fd; /* Lighter link color */
+        }
 
-      .isERC1155-input {
-        display: flex;
-        border: 1px solid #e5e7eb;
-        margin-top: 10px;
-        flex-basis: 80%;
-        border-radius: 5px;
-        padding: 10px;
-        font-size: 14px;
-      }
-
-      .isNotERC1155-input {
-        display: none;
-      }
-      .redirect-metamask {
-        background-color: transparent;
-        border: none;
-        padding: 0px;
-        font-size: 10px;
-        color: #60a5fa;
+        .isERC1155-input,
+        .unlock-requirement {
+          border: 1px solid #4b5563; /* Dark input borders */
+          background-color: #404040; /* Dark input background */
+          color: #eee; /* Light text */
+        }
       }
     </style>
   </head>
-
   <body>
     :paywall_html:
     <script>
